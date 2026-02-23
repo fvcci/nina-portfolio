@@ -49,6 +49,7 @@ if (!isMobile) {
       if (imgLoaded) {
         // Hide system mouse on the CANVAS specifically
         if (currentTarget) currentTarget.style.cursor = "none";
+        document.body.style.cursor = "none";
 
         // Show & Position PNG (Top-left corner hits mouse)
         composeImg.style.display = "block";
@@ -57,11 +58,13 @@ if (!isMobile) {
       } else {
         // Fallback: Image failed, show system mouse
         if (currentTarget) currentTarget.style.cursor = "auto";
+        document.body.style.cursor = "auto";
         composeImg.style.display = "none";
       }
     } else {
       // Normal Section: Reset everything
       if (currentTarget) currentTarget.style.cursor = "default";
+      document.body.style.cursor = "auto";
       composeImg.style.display = "none";
     }
 

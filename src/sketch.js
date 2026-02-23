@@ -105,7 +105,9 @@ function initSketch() {
     let celestialColors = [];
 
     p.setup = function () {
-      let cnv = p.createCanvas(p.windowWidth, 600);
+      let isMobile = p.windowWidth < 768;
+      let canvasHeight = isMobile ? p.windowWidth * 1.5 : 600;
+      let cnv = p.createCanvas(p.windowWidth, canvasHeight);
       cnv.parent("sketch-container"); // ADD THIS LINE
 
       cnv.style("display", "block");
@@ -143,10 +145,11 @@ function initSketch() {
     function layoutNotes() {
       let w = p.windowWidth;
       let isMobile = w < 768;
+      let canvasHeight = isMobile ? w * 1.5 : 600;
       let margin = w < 600 ? 20 : 60;
       let maxLineWidth = w - margin * 2;
-      let rowHeight = isMobile ? 50 : 110;
-      let y = isMobile ? 16 : 80;
+      let rowHeight = isMobile ? 38 : 110;
+      let y = isMobile ? 0 : 80;
 
       // Group notes into rows first to calculate centering
       let rows = [[]];
@@ -182,7 +185,7 @@ function initSketch() {
         y += rowHeight;
       }
 
-      p.resizeCanvas(w, y + 150);
+      p.resizeCanvas(w, canvasHeight);
     }
 
     p.windowResized = () => layoutNotes();
@@ -284,7 +287,6 @@ function initSketch() {
         }
         p.pop();
       }
-      handleCursor();
     };
     // ... (Keep handleCursor, getHoveredNoteIndex, mousePressed, mouseDragged, etc. the same)
     function handleCursor() {
@@ -292,7 +294,7 @@ function initSketch() {
       if (draggedNoteIndex !== -1) p.cursor("grabbing");
       else if (h !== -1)
         p.cursor(["♪", "♫"].includes(melody[h].char) ? "pointer" : "grab");
-      else p.cursor(p.ARROW);
+      else p.cursor("none");
     }
     function getHoveredNoteIndex() {
       for (let i = 0; i < melody.length; i++) {
