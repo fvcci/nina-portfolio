@@ -203,7 +203,7 @@ const uxuiCardsData = [
     title: "The Digital Music Box - Carousel Visualizer",
     tags: "CODE | MUSIC VISUALIZATION",
     link: "https://editor.p5js.org/ninistar/full/bu9tv-CMp",
-    video: "ponie2.mov",
+    video: "ponie2.mp4",
     description: "Interactive music visualization using p5.js",
   },
 
