@@ -3,6 +3,55 @@ materialIcons.rel = "stylesheet";
 materialIcons.href = "https://fonts.googleapis.com/icon?family=Material+Icons";
 document.head.appendChild(materialIcons);
 
+// Create tooltip element for "coming soon" cards
+const tooltip = document.createElement("div");
+tooltip.id = "card-tooltip";
+tooltip.style.cssText = `
+  position: fixed;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fcfcfc;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: 'Fragment Mono', monospace;
+  font-size: 14px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  z-index: 1000;
+  white-space: nowrap;
+`;
+tooltip.textContent = "coming soon";
+document.body.appendChild(tooltip);
+
+// Mouse tracking for tooltip - only for cards without links, desktop only
+document.addEventListener("mousemove", (e) => {
+  // Only show tooltip on desktop (md breakpoint and up = 768px)
+  if (window.innerWidth < 768) return;
+
+  const tooltipCards = document.querySelectorAll(".has-tooltip");
+  let shouldShow = false;
+
+  tooltipCards.forEach((card) => {
+    const rect = card.getBoundingClientRect();
+    if (
+      e.clientX >= rect.left &&
+      e.clientX <= rect.right &&
+      e.clientY >= rect.top &&
+      e.clientY <= rect.bottom
+    ) {
+      shouldShow = true;
+    }
+  });
+
+  if (shouldShow) {
+    tooltip.style.opacity = "1";
+    tooltip.style.left = e.clientX + 45 + "px";
+    tooltip.style.top = e.clientY + "px";
+  } else {
+    tooltip.style.opacity = "0";
+  }
+});
+
 // Dynamically load another JavaScript file (additional.js)
 const script = document.createElement("script");
 script.src = "cursor.js"; // Path to the additional JS file
@@ -16,12 +65,15 @@ script.onload = function () {
 };
 
 // Helper to build the media element (video or image)
-function getMediaHTML(card, imageClass, hoverClass) {
+function getMediaHTML(card, imageClass, hasHover = false) {
+  const hoverClass = hasHover
+    ? "transition duration-300 ease-in-out hover:scale-110"
+    : "";
   if (card.video) {
     return `
       <video
         src="${card.video}"
-        class="w-full h-auto ${imageClass} transition duration-300 ease-in-out hover:scale-110"
+        class="w-full h-auto ${imageClass} ${hoverClass}"
         autoplay
         muted
         loop
@@ -34,7 +86,7 @@ function getMediaHTML(card, imageClass, hoverClass) {
       src="${card.image}"
       alt="${card.title}"
       loading="lazy"
-      class="w-full h-auto ${imageClass} transition duration-300 ease-in-out hover:scale-110"
+      class="w-full h-auto ${imageClass} ${hoverClass}"
     />
   `;
 }
@@ -69,8 +121,6 @@ function createCards(sectionSelector, cardsData, isBrandSection = false) {
         ? "object-cover"
         : "object-contain";
 
-    const hoverClass = "transition duration-300 ease-in-out hover:scale-110";
-
     let tagHTML = "";
     if (card.tags) {
       const tagsArray = card.tags.split(" | ");
@@ -78,79 +128,22 @@ function createCards(sectionSelector, cardsData, isBrandSection = false) {
       tagHTML = `<p class="text-gray-500">${bracketTags}</p>`;
     }
 
-    const style = document.createElement("style");
-    style.textContent = /* css */ `
-      .parent:hover .pretty::after { 
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        width: 100%;
-        border-radius: 20px;
-        animation: 3s rotate linear infinite;
-        transition: background 0.3s ease-in-out;
-        background: conic-gradient(
-          from var(--angle),
-          #8a90e6 0%,
-          #80b3b3 25%,
-          #e96b8e 50%,
-          #66b3b3 75%,
-          #8a90e6 100%
-        ) border-box;
-      }
-
-      .parent:hover .pretty::before { 
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        width: 100%;
-        border-radius: 20px;
-        animation: 3s rotate linear infinite;
-        transition: background 0.3s ease-in-out;
-        background: conic-gradient(
-          from var(--angle),
-          #8a90e6 0%,
-          #80b3b3 25%,
-          #e96b8e 50%,
-          #66b3b3 75%,
-          #8a90e6 100%
-        ) border-box;
-        filter: blur(0.75rem);
-      }
-
-      @keyframes rotate {
-        to {
-          --angle: 360deg;
-        }
-      }
-      
-      @property --angle {
-        syntax: "<angle>";
-        initial-value: 0deg;
-        inherits: false;
-      }
-    `;
-    document.head.appendChild(style);
-
-    // Default (no link) card
+    // Default (no link) card - with tooltip on hover + mobile badge
     cardDiv.innerHTML = /*html*/ `
       <div class="${heightClass} w-full rounded-2xl relative z-10 overflow-hidden bg-[#f3f3f4]">
         <div class="inner-content w-full rounded-2xl overflow-hidden">
-          ${getMediaHTML(card, imageClass, hoverClass)}
+          ${getMediaHTML(card, imageClass, true)}
         </div>
+        <span class="md:hidden absolute top-3 right-3" style="
+          background: rgba(0, 0, 0, 0.7);
+          color: #fcfcfc;
+          padding: 4px 8px;
+          border-radius: 4px;
+          font-family: 'Fragment Mono', monospace;
+          font-size: 14px;
+        ">
+          COMING SOON
+        </span>
       </div>
       <div class="relative z-10">
         <div>${tagHTML}</div>
@@ -162,12 +155,11 @@ function createCards(sectionSelector, cardsData, isBrandSection = false) {
     // Wrap card in a link if the `link` property exists
     if (card.link) {
       const cardContent = /* html */ `
-        <div class="relative z-10 parent">
-          <div class="pretty"></div>
+        <div class="relative z-10">
           <div class="flex justify-center items-center rounded-[18px] p-[3px]">
             <div class="${heightClass} w-full rounded-2xl relative z-10 overflow-hidden bg-light">
               <div class="relative group">
-                ${getMediaHTML(card, imageClass, hoverClass)}
+                ${getMediaHTML(card, imageClass, true)}
               </div>
             </div>
           </div>
@@ -180,6 +172,9 @@ function createCards(sectionSelector, cardsData, isBrandSection = false) {
         </div>
       `;
       cardDiv.innerHTML = `<a href="${card.link}" class="space-y-4">${cardContent}</a>`;
+    } else {
+      // Only add tooltip class for cards WITHOUT links
+      cardDiv.classList.add("has-tooltip");
     }
 
     // Append card to alternating columns
@@ -197,7 +192,7 @@ function createCards(sectionSelector, cardsData, isBrandSection = false) {
 
 // Data for UX/UI cards
 const uxuiCardsData = [
-{
+  {
     title: "Genesys Cloud",
     tags: "INTERNSHIP",
     image: "gen.png",
@@ -209,7 +204,7 @@ const uxuiCardsData = [
     image: "ds.png",
     description: "Accessible component library for multi-platform products",
   },
-    {
+  {
     title: "Here:after",
     image: "here.png",
     link: "hereafter.html",
@@ -224,8 +219,6 @@ const uxuiCardsData = [
     description: "Interactive music visualization using p5.js",
   },
 
-
-
   {
     title: "Accessichat",
     image: "accessi.png",
@@ -233,7 +226,6 @@ const uxuiCardsData = [
     tags: "HONOURABLE MENTION | RGD CANADA '24 | HACKATHON | MOBILE",
     description: "AI chat interface built with accessibility-first approach",
   },
-     
 ];
 
 // Data for Brand cards
@@ -273,7 +265,7 @@ const playCardsData = [
     image: "meiva.png",
     description: "Cross-platform app for mobile and desktop",
   },
-   {
+  {
     title: "Dear Diary",
     tags: "ILLUSTRATION | WEB DESIGN | DESKTOP",
     link: "https://youtu.be/WAzITLPvqEU",

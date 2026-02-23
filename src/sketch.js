@@ -229,7 +229,7 @@ function initSketch() {
         // --- NEW INTERACTION LOGIC ---
         // Only hover if song is NOT playing
         let isHovered = p.dist(p.mouseX, p.mouseY, fx, fy) < 30 && !playing;
-        let c = isActive || isMusicNote ? n.hue : p.color('#fcfcfc');
+        let c = isActive || isMusicNote ? n.hue : p.color("#fcfcfc");
 
         if (isHovered && isMusicNote) {
           // 1. Pixel Noise Ding (Triggers once per hover)
@@ -245,13 +245,13 @@ function initSketch() {
           // 2. Visual Transformation
           p.scale(1.4);
           p.rotate(p.sin(p.frameCount * 0.1) * 0.2);
-          c = p.lerpColor(c, p.color('#fcfcfc'), 0.4); // Lighten note
+          c = p.lerpColor(c, p.color("#fcfcfc"), 0.4); // Lighten note
 
           // 3. Play Song Label with Translucent Rectangle
           p.push();
           p.resetMatrix();
           let msg = "play song";
-          p.textFont("monospace");
+          p.textFont("Fragment Mono");
           p.textSize(12);
           let tw = p.textWidth(msg);
 
@@ -260,7 +260,7 @@ function initSketch() {
           p.rectMode(p.CENTER);
           p.rect(p.mouseX + 45, p.mouseY, tw + 12, 18, 4);
 
-          p.fill('#fcfcfc');
+          p.fill("#fcfcfc");
           p.textAlign(p.CENTER, p.CENTER);
           p.text(msg, p.mouseX + 45, p.mouseY);
           p.pop();
