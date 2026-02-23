@@ -245,7 +245,6 @@ Prevents scrollbars if canvas is full screen */
 }
 
 #ascii-music-container canvas {
-  mix-blend-mode: multiply;
 }
 
 /* Projects section - 4 vertical lines (2 columns) */

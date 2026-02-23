@@ -170,10 +170,10 @@ function initAsciiMusic() {
       const mouseSpeed  = 2 + mx * 3;           // lerp(2,5,mx)
       const mouseChaos  = 20 + my * 40;          // lerp(20,60,my)
       const mouseStepMod = 1.2 + mx * 0.6;       // lerp(1.2,1.8,mx)
-      const effectRadius = 50 + my * 50;          // now 50–100 for speed
+      const effectRadius = 50 + my * 50;          // REDUCED: was 120–240, now 50–100
       const effectRadiusSq = effectRadius * effectRadius;
       const satBase     = 30 + my * 40;           // lerp(30,70,my)
-      const asciiInfluenceRadius = 80;            // REDUCED for speed
+      const asciiInfluenceRadius = 80;            // REDUCED: was 200
       const asciiInfluenceRadiusSq = asciiInfluenceRadius * asciiInfluenceRadius;
       const halfStep    = stepSize / 2;
       const smx = smoothMouseX, smy = smoothMouseY;
@@ -194,9 +194,9 @@ function initAsciiMusic() {
       const symScale = symLenM1 / 255;
 
       // Pre-compute per-row scan value (only depends on y)
-      // Wcompute inline but hoist constants out of inner loop
+      // compute inline but hoist constants out of inner loop
 
-      // raw ctx for text — avoids p5 fill() overhead (style string creation)
+      // Use raw ctx for text. avoids p5 fill() overhead (style string creation)
       ctx.font = `${stepSize}px Doto`;
       ctx.textBaseline = "alphabetic";
 
@@ -225,14 +225,14 @@ function initAsciiMusic() {
           const dx = smx - cx, dy = smy - cy;
           const distSq = dx * dx + dy * dy;
 
-          // Use dist² to gate whether sqrt is needed at all
+          // Use dist² to gate whether we need sqrt at all
           const nearMouse = distSq < effectRadiusSq;
           const nearAscii = distSq < asciiInfluenceRadiusSq;
           const distFromMouse = (nearMouse || nearAscii) ? Math.sqrt(distSq) : 0;
 
-          // Ripples only need dist when near mouse elsewhere use a cheaper approx
+          // Ripples only need dist when near mouse. elsewhere use a cheaper approx
           let ripple1, ripple2;
-          if (nearMouse || distSq < 90000) { // 300² and ripples visible range
+          if (nearMouse || distSq < 90000) { // 300². ripples visible range
             const d = distFromMouse || Math.sqrt(distSq);
             ripple1 = Math.sin(d * 0.02 - tSpeed6)  * (70 + mouseChaos);
             ripple2 = Math.cos(d * 0.035 - tSpeed4) * (40 + chaos05);
@@ -289,10 +289,8 @@ function initAsciiMusic() {
               ctx.fillText(sym, canvasX, canvasY + stepSize);
             }
           } else {
-            // Rect fallback
-            const tintR = r + (r255 - r) * tintMxR * 0.8 | 0;
-            const tintB = b + (b200 - b) * tintMxB * 0.8 | 0;
-            setFill(`rgb(${tintR},${g},${tintB})`);
+            // Rect fallback. original pixel color, no mouse tint so background stays #fcfcfc
+            setFill(`rgb(${r},${g},${b})`);
             ctx.fillRect(canvasX, canvasY, stepSize, stepSize);
           }
         }
