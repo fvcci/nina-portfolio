@@ -5,6 +5,9 @@ function initAsciiMusic() {
       "@", "#", "&", "＊", "%", "♫", "♪", "!", "+", "=",
       "?", "^", "☆", "♡", "<", "o", "•", ".", "~",
     ];
+    const symLen = symbols.length;
+    const symLenM1 = symLen - 1;
+
     let stepSize = 9;
     let t = 0;
     let asciiAmount = 1;
@@ -13,18 +16,27 @@ function initAsciiMusic() {
     let imgLoaded = false;
     let isMobile = false;
 
-    // Cached pixel data — loaded once so we're not calling loadPixels() every frame
     let cachedPixels = null;
     let cachedImgWidth = 0;
     let cachedImgHeight = 0;
 
-    // Smooth mouse/touch position with lerp to avoid jitter
+    // Pre-built brightness→symbol index LUT (0-255 → symIndex)
+    let brightnessLUT = new Uint8Array(512); // oversized to avoid clamping math
+
+    function buildLUT() {
+      for (let i = 0; i < 512; i++) {
+        let mapped = (i / 255) * symLenM1;
+        brightnessLUT[i] = Math.max(0, Math.min(symLenM1, Math.floor(mapped)));
+      }
+    }
+
     let smoothMouseX = 0;
     let smoothMouseY = 0;
-
-    // On mobile, track touch position manually
     let touchX = -1000;
     let touchY = -1000;
+
+    // Raw canvas 2D context for fast direct drawing
+    let ctx;
 
     p.preload = function () {
       isMobile = p.windowWidth < 768;
@@ -33,16 +45,13 @@ function initAsciiMusic() {
         "music.png",
         () => {
           img.resize(img.width / resizeFactor, img.height / resizeFactor);
-          // Cache pixel data once after resize
           img.loadPixels();
-          cachedPixels = img.pixels.slice(); // copy
+          cachedPixels = img.pixels.slice();
           cachedImgWidth = img.width;
           cachedImgHeight = img.height;
           imgLoaded = true;
         },
-        () => {
-          console.error("Failed to load image");
-        },
+        () => { console.error("Failed to load image"); }
       );
     };
 
@@ -57,9 +66,11 @@ function initAsciiMusic() {
       p.textSize(stepSize);
       p.noStroke();
       startTime = p.millis() / 1000;
-
       smoothMouseX = p.width * 0.5;
       smoothMouseY = p.height * 0.5;
+      buildLUT();
+      // Grab raw 2D context once
+      ctx = p.drawingContext;
     };
 
     let resizeTimer = null;
@@ -80,15 +91,11 @@ function initAsciiMusic() {
       let nowMobile = p.windowWidth < 768;
       let displayWidth = nowMobile ? p.windowWidth : 800;
       let displayHeight = nowMobile ? p.windowWidth * 0.5 : 400;
-
-      // Resize canvas immediately — no lag while dragging
       p.resizeCanvas(displayWidth, displayHeight);
       isMobile = nowMobile;
       stepSize = nowMobile ? 6 : 9;
       p.textSize(stepSize);
-
-      // Only re-cache pixels if we crossed the mobile/desktop breakpoint
-      // Debounced so it doesn't fire on every pixel of drag
+      ctx = p.drawingContext;
       if (resizeTimer) clearTimeout(resizeTimer);
       resizeTimer = setTimeout(function () {
         if (nowMobile !== lastIsMobile) {
@@ -98,37 +105,34 @@ function initAsciiMusic() {
       }, 200);
     };
 
-    // Mobile: track touch position, don't trigger dissolve
     p.touchStarted = function () {
-      if (isMobile && p.touches.length > 0) {
-        touchX = p.touches[0].x;
-        touchY = p.touches[0].y;
-      }
-      return false; // prevent default scroll
+      if (isMobile && p.touches.length > 0) { touchX = p.touches[0].x; touchY = p.touches[0].y; }
+      return false;
     };
-
     p.touchMoved = function () {
-      if (isMobile && p.touches.length > 0) {
-        touchX = p.touches[0].x;
-        touchY = p.touches[0].y;
-      }
+      if (isMobile && p.touches.length > 0) { touchX = p.touches[0].x; touchY = p.touches[0].y; }
       return false;
     };
-
-    p.touchEnded = function () {
-      // Fade touch influence out gradually (set off-screen)
-      touchX = -1000;
-      touchY = -1000;
-      return false;
-    };
-
-    // Desktop only: click resets the dissolve cycle
+    p.touchEnded = function () { touchX = -1000; touchY = -1000; return false; };
     p.mousePressed = function () {
-      if (!isMobile) {
-        startTime = p.millis() / 1000;
-        asciiAmount = 1;
-      }
+      if (!isMobile) { startTime = p.millis() / 1000; asciiAmount = 1; }
     };
+
+    // HSB→RGB helper (h: 0-360, s: 0-100, v: 0-100) → [r,g,b] 0-255
+    function hsvToRgb(h, s, v) {
+      s /= 100; v /= 100;
+      const c = v * s;
+      const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+      const m = v - c;
+      let r = 0, g = 0, b = 0;
+      if (h < 60)       { r = c; g = x; }
+      else if (h < 120) { r = x; g = c; }
+      else if (h < 180) { g = c; b = x; }
+      else if (h < 240) { g = x; b = c; }
+      else if (h < 300) { r = x; b = c; }
+      else              { r = c; b = x; }
+      return [(r + m) * 255 | 0, (g + m) * 255 | 0, (b + m) * 255 | 0];
+    }
 
     p.draw = function () {
       p.background("#fcfcfc");
@@ -139,124 +143,163 @@ function initAsciiMusic() {
         return;
       }
 
-      t += 0.055; // fast tick
+      t += 0.055;
 
-      // Smooth the effective pointer position
-      let targetX, targetY;
-      if (isMobile) {
-        targetX = touchX;
-        targetY = touchY;
-      } else {
-        targetX = p.mouseX;
-        targetY = p.mouseY;
-      }
+      // Pointer target
+      let targetX = isMobile ? touchX : p.mouseX;
+      let targetY = isMobile ? touchY : p.mouseY;
+      smoothMouseX += (targetX - smoothMouseX) * 0.12;
+      smoothMouseY += (targetY - smoothMouseY) * 0.12;
 
-      // Lerp towards target — prevents jarring jumps
-      smoothMouseX = p.lerp(smoothMouseX, targetX, 0.12);
-      smoothMouseY = p.lerp(smoothMouseY, targetY, 0.12);
-
-      let offsetX = (p.width - cachedImgWidth) / 2;
-      let offsetY = (p.height - cachedImgHeight) / 2 - (isMobile ? 20 : 0);
+      const offsetX = (p.width - cachedImgWidth) / 2;
+      const offsetY = (p.height - cachedImgHeight) / 2 - (isMobile ? 20 : 0);
 
       let elapsed = p.millis() / 1000 - startTime;
+      if (elapsed >= transitionDuration * 2) { startTime = p.millis() / 1000; elapsed = 0; }
 
-      // Loop every full cycle
-      if (elapsed >= transitionDuration * 2) {
-        startTime = p.millis() / 1000;
-        elapsed = 0;
-      }
-
-      let halfDuration = transitionDuration;
+      const halfDuration = transitionDuration;
       if (elapsed < halfDuration) {
-        let progress = elapsed / halfDuration;
-        asciiAmount = p.pow(1 - progress, 2.5);
-        asciiAmount = p.max(asciiAmount, 0.15);
+        asciiAmount = Math.max(Math.pow(1 - elapsed / halfDuration, 2.5), 0.15);
       } else {
-        let progress = (elapsed - halfDuration) / halfDuration;
-        asciiAmount = p.pow(progress, 2.5);
-        asciiAmount = p.max(asciiAmount, 0.15);
+        asciiAmount = Math.max(Math.pow((elapsed - halfDuration) / halfDuration, 2.5), 0.15);
       }
 
-      // Normalize smooth pointer
-      let mx = p.constrain(smoothMouseX / p.width, 0, 1);
-      let my = p.constrain(smoothMouseY / p.height, 0, 1);
+      const mx = Math.min(Math.max(smoothMouseX / p.width, 0), 1);
+      const my = Math.min(Math.max(smoothMouseY / p.height, 0), 1);
 
-      // Reduce chaos values significantly for less glitchiness
-      let mouseSpeed = p.lerp(2, 5, mx);           // faster base + range
-      let mouseChaos = p.lerp(20, 60, my);          // more chaos always present
-      let mouseStepMod = p.lerp(1.2, 1.8, mx);
+      const mouseSpeed  = 2 + mx * 3;           // lerp(2,5,mx)
+      const mouseChaos  = 20 + my * 40;          // lerp(20,60,my)
+      const mouseStepMod = 1.2 + mx * 0.6;       // lerp(1.2,1.8,mx)
+      const effectRadius = 50 + my * 50;          // now 50–100 for speed
+      const effectRadiusSq = effectRadius * effectRadius;
+      const satBase     = 30 + my * 40;           // lerp(30,70,my)
+      const asciiInfluenceRadius = 80;            // REDUCED for speed
+      const asciiInfluenceRadiusSq = asciiInfluenceRadius * asciiInfluenceRadius;
+      const halfStep    = stepSize / 2;
+      const smx = smoothMouseX, smy = smoothMouseY;
+      // Cache last fillStyle to skip redundant style assignments
+      let lastFillStyle = "";
+      const setFill = (s) => { if (s !== lastFillStyle) { ctx.fillStyle = s; lastFillStyle = s; } };
+      const tSpeed6  = t * 6 * mouseSpeed;
+      const tSpeed4  = t * 4 * mouseSpeed;
+      const tSpeed3  = t * 3 * mouseSpeed;
+      const tSpeed15 = t * mouseSpeed * 1.5;
+      const chaos05  = mouseChaos * 0.5;
+      const chaos07  = mouseChaos * 0.7;
+      const mxWave   = mx * 2 + 0.5;
+      const tintMxR  = mx * 0.1;       // lerp factor for r tint (0.1 weight)
+      const tintMxB  = (1 - mx) * 0.1; // lerp factor for b tint
+      const r255     = 255 * mx;
+      const b200     = 200 * (1 - mx);
+      const symScale = symLenM1 / 255;
+
+      // Pre-compute per-row scan value (only depends on y)
+      // Wcompute inline but hoist constants out of inner loop
+
+      // raw ctx for text — avoids p5 fill() overhead (style string creation)
+      ctx.font = `${stepSize}px Doto`;
+      ctx.textBaseline = "alphabetic";
+
+      const pxW = cachedImgWidth;
 
       for (let imgY = 0; imgY < cachedImgHeight; imgY += stepSize) {
-        for (let imgX = 0; imgX < cachedImgWidth; imgX += stepSize) {
-          let index = (imgX + imgY * cachedImgWidth) * 4;
-          let r = cachedPixels[index];
-          let g = cachedPixels[index + 1];
-          let b = cachedPixels[index + 2];
-          let a = cachedPixels[index + 3];
+        const canvasY = imgY + offsetY;
+        const cy = canvasY + halfStep;
+        const scan = Math.sin(tSpeed3 + canvasY * 0.12) * (40 + chaos07);
 
-          // Skip fully transparent pixels early
+        for (let imgX = 0; imgX < cachedImgWidth; imgX += stepSize) {
+          const index = (imgX + imgY * pxW) * 4;
+          const r = cachedPixels[index];
+          const g = cachedPixels[index + 1];
+          const b = cachedPixels[index + 2];
+          const a = cachedPixels[index + 3];
+
           if (a < 10) continue;
 
-          let brightnessVal = (r + g + b) / 3;
-
-          // Skip very bright (near-white) background pixels for speed
+          const brightnessVal = (r + g + b) / 3;
           if (brightnessVal > 245 && a < 50) continue;
 
-          let canvasX = imgX + offsetX;
-          let canvasY = imgY + offsetY;
+          const canvasX = imgX + offsetX;
+          const cx = canvasX + halfStep;
 
-          let distFromMouse = p.dist(smoothMouseX, smoothMouseY, canvasX, canvasY);
+          const dx = smx - cx, dy = smy - cy;
+          const distSq = dx * dx + dy * dy;
 
-          // Smoother, reduced amplitude ripples
-          let ripple1 = p.sin(distFromMouse * 0.02 - t * 6 * mouseSpeed) * (70 + mouseChaos);
-          let ripple2 = p.cos(distFromMouse * 0.035 - t * 4 * mouseSpeed) * (40 + mouseChaos * 0.5);
-          let scan = p.sin(t * 3 * mouseSpeed + canvasY * 0.12) * (40 + mouseChaos * 0.7);
-          let extraWave = p.sin(t * mouseSpeed * 1.5 + canvasX * 0.06 * (mx * 2 + 0.5)) * (mouseChaos * 0.7);
+          // Use dist² to gate whether sqrt is needed at all
+          const nearMouse = distSq < effectRadiusSq;
+          const nearAscii = distSq < asciiInfluenceRadiusSq;
+          const distFromMouse = (nearMouse || nearAscii) ? Math.sqrt(distSq) : 0;
 
-          let animatedBrightness = brightnessVal + scan + ripple1 + ripple2 + extraWave;
+          // Ripples only need dist when near mouse elsewhere use a cheaper approx
+          let ripple1, ripple2;
+          if (nearMouse || distSq < 90000) { // 300² and ripples visible range
+            const d = distFromMouse || Math.sqrt(distSq);
+            ripple1 = Math.sin(d * 0.02 - tSpeed6)  * (70 + mouseChaos);
+            ripple2 = Math.cos(d * 0.035 - tSpeed4) * (40 + chaos05);
+          } else {
+            ripple1 = Math.sin(-tSpeed6) * (70 + mouseChaos) * 0.3;
+            ripple2 = Math.cos(-tSpeed4) * (40 + chaos05) * 0.3;
+          }
+          const extraWave = Math.sin(tSpeed15 + canvasX * 0.06 * mxWave) * chaos07;
 
-          let symbolIndex = p.floor(p.map(animatedBrightness, 0, 255, 0, symbols.length - 1));
-          symbolIndex = p.constrain(symbolIndex, 0, symbols.length - 1);
+          const animatedBrightness = brightnessVal + scan + ripple1 + ripple2 + extraWave;
 
+          // LUT lookup — clamp into 0-511
+          const lutIdx = Math.max(0, Math.min(511, animatedBrightness | 0));
+          const symbolIndex = brightnessLUT[lutIdx];
+
+          // Determine localAsciiAmount
           let localAsciiAmount = asciiAmount;
-          if (distFromMouse < 200) {
-            let influence = p.map(distFromMouse, 0, 200, 1, 0);
-            influence = p.pow(influence, 2);
-            localAsciiAmount = p.lerp(asciiAmount, 1.0, influence * 0.5);
+          if (nearAscii) {
+            const influence = (1 - distFromMouse / asciiInfluenceRadius);
+            localAsciiAmount += (1.0 - asciiAmount) * influence * influence * 0.5;
           }
 
-          if (p.random() < localAsciiAmount) {
-            p.push();
-            p.translate(canvasX + stepSize / 2, canvasY + stepSize / 2);
+          if (Math.random() < localAsciiAmount) {
+            const sym = symbols[symbolIndex];
 
-            let effectRadius = p.lerp(120, 240, my);
-            if (distFromMouse < effectRadius) {
-              let influence = p.map(distFromMouse, 0, effectRadius, 1, 0);
-              // Gentler rotation — less spinny
-              let rotation = influence * p.PI * 0.8 * mouseStepMod;
-              p.rotate(rotation + t * influence * mouseSpeed * 0.5);
+            if (nearMouse) {
+              const influence = 1 - distFromMouse / effectRadius;
+              const rot = influence * Math.PI * 0.8 * mouseStepMod + t * influence * mouseSpeed * 0.5;
 
-              let hueShift = (distFromMouse * 0.4 + t * 40 + mx * 180) % 360;
-              let saturation = p.lerp(30, 70, my) * influence;
-              p.colorMode(p.HSB, 360, 100, 100);
-              p.fill(hueShift, saturation, p.map(brightnessVal, 0, 255, 30, 100));
-              p.colorMode(p.RGB, 255);
+              // Skip save/restore/rotate for negligible rotation (< ~5°)
+              if (rot > 0.08) {
+                const hueShift  = (distFromMouse * 0.4 + t * 40 + mx * 180) % 360;
+                const saturation = satBase * influence;
+                const val = 30 + (brightnessVal / 255) * 70;
+                const [rr, gg, bb] = hsvToRgb(hueShift, saturation, val);
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate(rot);
+                setFill(`rgb(${rr},${gg},${bb})`);
+                ctx.fillText(sym, -halfStep, halfStep);
+                ctx.restore();
+              } else {
+                const hueShift  = (distFromMouse * 0.4 + t * 40 + mx * 180) % 360;
+                const saturation = satBase * influence;
+                const val = 30 + (brightnessVal / 255) * 70;
+                const [rr, gg, bb] = hsvToRgb(hueShift, saturation, val);
+                setFill(`rgb(${rr},${gg},${bb})`);
+                ctx.fillText(sym, canvasX, canvasY + stepSize);
+              }
             } else {
-              let tintR = p.lerp(r, p.map(mx, 0, 1, r, 255), 0.1);
-              let tintB = p.lerp(b, p.map(1 - mx, 0, 1, b, 200), 0.1);
-              p.fill(tintR, g, tintB);
+              const tintR = r + (r255 - r) * tintMxR | 0;
+              const tintB = b + (b200 - b) * tintMxB | 0;
+              setFill(`rgb(${tintR},${g},${tintB})`);
+              ctx.fillText(sym, canvasX, canvasY + stepSize);
             }
-
-            p.text(symbols[symbolIndex], -stepSize / 2, stepSize / 2);
-            p.pop();
           } else {
-            let tintR = p.lerp(r, p.map(mx, 0, 1, r, 255), 0.08);
-            let tintB = p.lerp(b, p.map(1 - mx, 0, 1, b, 200), 0.08);
-            p.fill(tintR, g, tintB);
-            p.rect(canvasX, canvasY, stepSize, stepSize);
+            // Rect fallback
+            const tintR = r + (r255 - r) * tintMxR * 0.8 | 0;
+            const tintB = b + (b200 - b) * tintMxB * 0.8 | 0;
+            setFill(`rgb(${tintR},${g},${tintB})`);
+            ctx.fillRect(canvasX, canvasY, stepSize, stepSize);
           }
         }
       }
+
+      // Restore p5 state so p5 internals don't get confused
+      p.noStroke();
     };
   };
   new p5(sketch);
