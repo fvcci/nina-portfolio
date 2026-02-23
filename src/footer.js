@@ -15,7 +15,7 @@ class FooterComponent extends HTMLElement {
 
         footer {
           background: #1B191B;
-          padding: 40px 96px;
+          padding: 40px 80px;
           border-top: 1px solid #272630;
           display: flex;
           justify-content: space-between;
@@ -122,7 +122,7 @@ class FooterComponent extends HTMLElement {
 
         @media (max-width: 900px) {
           footer {
-            padding: 36px 48px;
+            padding: 36px 64px;
           }
           .nav-links a {
             padding: 6px 7px;
@@ -133,7 +133,7 @@ class FooterComponent extends HTMLElement {
           footer {
             flex-direction: column;
             align-items: center;
-            padding: 32px 24px;
+            padding: 32px 16px;
             gap: 20px;
             text-align: center;
           }
