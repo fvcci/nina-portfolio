@@ -57,7 +57,7 @@ class ScrollComponent extends HTMLElement {
         }
 
         #scroll:hover {
-          background-color: #5e3c49;
+          background-color: #2a2830;
           transform: translateY(-4px); /* Slightly raise on hover */
         }
 
