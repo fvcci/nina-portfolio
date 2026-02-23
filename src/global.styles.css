@@ -223,7 +223,7 @@ Prevents scrollbars if canvas is full screen */
 .hero-with-grid::before {
   content: "";
   position: absolute;
-  top: var(--grid-crosshair-y);
+  top: calc(var(--grid-crosshair-y) + 24px);
   left: 0;
   right: 0;
   height: 1px;
@@ -234,13 +234,13 @@ Prevents scrollbars if canvas is full screen */
 
 /* Hero left crosshair - intersects at line 1 */
 .hero-with-grid .grid-crosshair.left {
-  top: var(--grid-crosshair-y);
+  top: calc(var(--grid-crosshair-y) + 24px);
   left: var(--grid-line-1);
 }
 
 /* Hero right crosshair - intersects at line 4 */
 .hero-with-grid .grid-crosshair.right {
-  top: var(--grid-crosshair-y);
+  top: calc(var(--grid-crosshair-y) + 24px);
   left: var(--grid-line-4);
 }
 
