@@ -105,10 +105,12 @@ function initSketch() {
     let celestialColors = [];
 
     p.setup = function () {
-      let isMobile = p.windowWidth < 768;
-      let canvasHeight = isMobile ? p.windowWidth * 1.5 : 600;
-      let cnv = p.createCanvas(p.windowWidth, canvasHeight);
-      cnv.parent("sketch-container"); // ADD THIS LINE
+      let w = p.windowWidth;
+      let h = p.windowHeight;
+      // Mobile gets taller canvas to prevent cropping
+      let canvasHeight = w < 600 ? h * 0.8 : h * 0.6;
+      let cnv = p.createCanvas(w, canvasHeight);
+      cnv.parent("sketch-container");
 
       cnv.style("display", "block");
       cnv.style("max-width", "100%");
@@ -144,12 +146,21 @@ function initSketch() {
 
     function layoutNotes() {
       let w = p.windowWidth;
-      let isMobile = w < 768;
-      let canvasHeight = isMobile ? w * 1.5 : 600;
-      let margin = w < 600 ? 20 : 60;
+      let h = p.windowHeight;
+
+      // Proportional calculations instead of rigid breakpoints
+      let margin = w * 0.05; // 5% margin on each side
       let maxLineWidth = w - margin * 2;
-      let rowHeight = isMobile ? 38 : 110;
-      let y = isMobile ? 0 : 80;
+
+      // Smaller padding on mobile, larger on desktop
+      let topPadding = w < 600 ? h * 0.05 : h * 0.08 + w * 0.02;
+      let bottomPadding = w < 600 ? h * 0.08 : h * 0.12 + w * 0.02;
+
+      // Scale row height and symbol size - smaller values on mobile
+      let rowHeight = w < 600 ? h * 0.06 : h * 0.08;
+      let symbolSize = p.constrain(w * 0.04, 16, 30); // 4% of width, clamped between 16-30
+
+      let y = topPadding;
 
       // Group notes into rows first to calculate centering
       let rows = [[]];
@@ -157,7 +168,7 @@ function initSketch() {
       let currentX = 0;
 
       for (let n of melody) {
-        let noteW = 40 + n.dur * 5;
+        let noteW = 30 + n.dur * 3; // Smaller note width on mobile
         if (currentX + noteW > maxLineWidth) {
           currentRow++;
           rows[currentRow] = [];
@@ -179,13 +190,23 @@ function initSketch() {
           // Offset runningX by half the note width because text is CENTER aligned
           n.targetX = runningX + item.width / 2;
           n.targetY = y;
-          n.spawnDelay = y * 0.2 + n.myPersonalTrinkle;
+          n.spawnDelay = y * 0.15 + n.myPersonalTrinkle;
           runningX += item.width;
         }
         y += rowHeight;
       }
 
-      p.resizeCanvas(w, canvasHeight);
+      // Store symbol size for use in draw
+      window.sketchSymbolSize = symbolSize;
+
+      // Calculate minimum needed height for content
+      let contentHeight = topPadding + rows.length * rowHeight + bottomPadding;
+      // Ensure canvas is at least 80% of viewport height on mobile, 60% on desktop
+      let minCanvasHeight = w < 600 ? h * 0.8 : h * 0.6;
+      let finalCanvasHeight = Math.max(contentHeight, minCanvasHeight);
+
+      // Resize canvas
+      p.resizeCanvas(w, finalCanvasHeight);
     }
 
     p.windowResized = () => layoutNotes();
