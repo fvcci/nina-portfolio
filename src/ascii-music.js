@@ -170,10 +170,10 @@ function initAsciiMusic() {
       const mouseSpeed  = 2 + mx * 3;           // lerp(2,5,mx)
       const mouseChaos  = 20 + my * 40;          // lerp(20,60,my)
       const mouseStepMod = 1.2 + mx * 0.6;       // lerp(1.2,1.8,mx)
-      const effectRadius = 50 + my * 50;          // REDUCED: was 120–240, now 50–100
+      const effectRadius = 80 + my * 80;          // REDUCED: was 120–240, now 50–100
       const effectRadiusSq = effectRadius * effectRadius;
       const satBase     = 30 + my * 40;           // lerp(30,70,my)
-      const asciiInfluenceRadius = 80;            // REDUCED: was 200
+      const asciiInfluenceRadius = 120;            // REDUCED: was 200
       const asciiInfluenceRadiusSq = asciiInfluenceRadius * asciiInfluenceRadius;
       const halfStep    = stepSize / 2;
       const smx = smoothMouseX, smy = smoothMouseY;
