@@ -21,6 +21,7 @@ headerTemplate.innerHTML = /* html */ `
       z-index: 50;
     }
 
+    /* ─── CONTAINER ─────────────────────────────────────────── */
     .container {
       width: 100%;
       display: flex;
@@ -35,12 +36,13 @@ headerTemplate.innerHTML = /* html */ `
       pointer-events: none;
     }
 
+    /* ─── HEADER PILL ───────────────────────────────────────── */
     header {
       background: rgba(252, 252, 252, 1);
       width: auto;
       min-width: min-content;
       margin-top: 1rem;
-      padding: 8px 20px;
+      padding: 8px;
       border-radius: 20px;
       border: 1px solid #d3d3d3;
       transition: all 0.3s ease;
@@ -48,23 +50,20 @@ headerTemplate.innerHTML = /* html */ `
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 0.5rem;
+      gap: 4px;
     }
 
-    header.project-mode {
-      padding: 8px 16px;
-    }
-
+    /* ─── NAV LINKS ─────────────────────────────────────────── */
     nav {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 0.5rem;
+      gap: 4px;
     }
 
     .nav-links {
       display: flex;
-      gap: 0.5rem;
+      gap: 4px;
       list-style: none;
       font-weight: 500;
       align-items: center;
@@ -90,9 +89,10 @@ headerTemplate.innerHTML = /* html */ `
       color: #fff !important;
     }
 
+    /* ─── PROJECT BUTTON ────────────────────────────────────── */
     .project-button {
-      background-color: #1B191B !important;
-      color: #fff !important;
+      background-color: #1B191B;
+      color: #fff;
       padding: 8px 16px;
       border-radius: 12px;
       cursor: pointer;
@@ -100,12 +100,55 @@ headerTemplate.innerHTML = /* html */ `
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      white-space: nowrap;
+      user-select: none;
     }
 
     .project-button:hover {
-      background-color: #333 !important;
+      background-color: #333;
     }
 
+    /* ─── CLOSE BUTTON ──────────────────────────────────────── */
+    .close-button {
+      cursor: pointer;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      transition: background 0.2s;
+    }
+
+    .close-button:hover {
+      background-color: #f0f0f0;
+    }
+
+    .close-button img {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* ─── HAMBURGER BUTTON ──────────────────────────────────── */
+    .hamburger-button {
+      cursor: pointer;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      transition: background 0.2s;
+    }
+
+    .hamburger-button:hover {
+      background-color: #f0f0f0;
+    }
+
+    .hamburger-button img {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* ─── DROPDOWN ──────────────────────────────────────────── */
     .dropdown {
       position: relative;
       display: inline-block;
@@ -114,9 +157,8 @@ headerTemplate.innerHTML = /* html */ `
     .dropdown-content {
       display: none;
       position: absolute;
-      top: 100%;
+      top: calc(100% + 0.5rem);
       left: 0;
-      margin-top: 0.5rem;
       background: rgba(252, 252, 252, 1);
       border: 1px solid #d3d3d3;
       border-radius: 12px;
@@ -134,7 +176,8 @@ headerTemplate.innerHTML = /* html */ `
       color: #8C8A98;
       padding: 10px 16px;
       display: block;
-      text-align: left;
+      font-size: 14px;
+      transition: all 0.2s;
     }
 
     .dropdown-content a:hover {
@@ -142,155 +185,108 @@ headerTemplate.innerHTML = /* html */ `
       color: #1B191B;
     }
 
-    .close-button {
-      cursor: pointer;
-      padding: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .close-button:hover {
-      background-color: #f0f0f0;
+    /* ─── HAMBURGER MENU DROPDOWN ───────────────────────────── */
+    .ham-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 0.5rem);
+      right: 0;
+      background: rgba(252, 252, 252, 1);
+      border: 1px solid #d3d3d3;
       border-radius: 12px;
+      min-width: 180px;
+      z-index: 100;
+      padding: 8px 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
-    .close-button img {
-      width: 20px;
-      height: 20px;
+    .ham-dropdown.show {
+      display: block;
     }
 
+    .ham-dropdown a {
+      color: #8C8A98;
+      padding: 10px 16px;
+      display: block;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .ham-dropdown a:hover {
+      background-color: #f0f0f0;
+      color: #1B191B;
+    }
+
+    /* ─── NAV LAYOUT SLOTS ──────────────────────────────────── */
     .nav-left {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 4px;
     }
 
     .nav-center {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 4px;
     }
 
     .nav-right {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 4px;
+      position: relative;
     }
 
-    #hamburger-icon {
+    /* Hamburger only shows on mobile (default mode) */
+    .hamburger-button {
       display: none;
-      cursor: pointer;
-      height: 24px;
     }
 
+    /* Project mode: hamburger never shows at all */
+    .project-ham {
+      display: none !important;
+    }
+
+    /* ─── MOBILE ────────────────────────────────────────────── */
     @media (max-width: 768px) {
       .container {
-        justify-content: flex-start;
+        justify-content: stretch;
       }
+
       header {
         width: 100%;
         margin-top: 0;
         border-radius: 0;
-        padding: 12px 16px;
-        justify-content: space-between;
-      }
-      header.project-mode {
-        padding: 12px 16px;
-      }
-      nav { 
-        display: none;
-      }
-      #hamburger-icon { 
-        display: block;
-        order: 1;
-      }
-      .nav-links {
-        display: none;
-        flex-direction: column;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: rgba(252, 252, 252, 1);
         padding: 16px;
-        margin: 8px 16px;
-        border-radius: 16px;
-        border: 1px solid #d3d3d3;
-        gap: 1rem;
-        z-index: 100;
-      }
-      .nav-links.open { display: flex; }
-      .nav-links a { width: 100%; text-align: center; }
-      
-      .mobile-popup {
-        display: none;
-        position: fixed;
-        top: 60px;
-        left: 16px;
-        right: 16px;
-        background: rgba(252, 252, 252, 1);
-        border: 1px solid #d3d3d3;
-        border-radius: 16px;
-        padding: 16px;
-        z-index: 200;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      }
-      
-      .mobile-popup.show {
-        display: block;
-      }
-      
-      .mobile-popup .dropdown-content {
-        position: static;
-        margin-top: 8px;
-        border: none;
-        box-shadow: none;
-        padding-left: 0;
       }
 
-      .project-button-mobile {
-        background-color: #1B191B !important;
-        color: #fff !important;
-        padding: 12px 16px;
-        border-radius: 12px;
-        cursor: pointer;
-        font-size: 14px;
+      /* Hide desktop center nav on mobile */
+      .nav-center {
+        display: none;
+      }
+
+      /* Show hamburger on mobile (default mode only) */
+      .hamburger-button {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
       }
 
-      .project-button-mobile::after {
-        content: "▼";
-        font-size: 10px;
+      .ham-dropdown {
+        right: 0;
+        top: calc(100% + 0.75rem);
       }
 
-      .project-button-mobile.expanded::after {
-        content: "▲";
-      }
-
-      .nav-left, .nav-center, .nav-right {
-        display: none;
+      .dropdown-content {
+        left: 0;
+        top: calc(100% + 0.75rem);
       }
     }
   </style>
 
   <div class="container" id="header-container">
     <header>
-      <div class="nav-left">
-        <img src="ham.svg" id="hamburger-icon" alt="Menu" />
-      </div>
-      <div class="nav-center">
-        <ul class="nav-links">
-          <li><a href="index.html">WORKS</a></li>
-          <li><a href="archive.html">PLAYGROUND</a></li>
-          <li><a href="about.html">ABOUT</a></li>
-          <li><a href="mailto:ninalle.65@gmail.com">RESUME</a></li>
-        </ul>
-      </div>
-      <div class="nav-right"></div>
+      <div class="nav-left" id="nav-left"></div>
+      <div class="nav-center" id="nav-center"></div>
+      <div class="nav-right" id="nav-right"></div>
     </header>
   </div>
 `;
@@ -301,107 +297,144 @@ class Header extends HTMLElement {
     const shadowRoot = this.attachShadow({ mode: "open" });
     shadowRoot.appendChild(headerTemplate.content.cloneNode(true));
 
-    this.container = shadowRoot.getElementById("header-container");
-    this.hamburgerIcon = this.shadowRoot.getElementById("hamburger-icon");
-    this.navLinks = shadowRoot.querySelector(".nav-links");
-    this.header = shadowRoot.querySelector("header");
-    this.navLeft = shadowRoot.querySelector(".nav-left");
-    this.navCenter = shadowRoot.querySelector(".nav-center");
-    this.navRight = shadowRoot.querySelector(".nav-right");
+    this.container  = shadowRoot.getElementById("header-container");
+    this.navLeft    = shadowRoot.getElementById("nav-left");
+    this.navCenter  = shadowRoot.getElementById("nav-center");
+    this.navRight   = shadowRoot.getElementById("nav-right");
+    this.header     = shadowRoot.querySelector("header");
 
-    this.hamburgerIcon.addEventListener("click", this.toggleMenu.bind(this));
     this.handleScroll = this.handleScroll.bind(this);
   }
 
   connectedCallback() {
     window.addEventListener("scroll", this.handleScroll);
-    this.setActiveLink();
-    this.setupProjectMode();
+
+    const isProjectPage = this.hasAttribute("project-page");
+    if (isProjectPage) {
+      this.setupProjectMode();
+    } else {
+      this.setupDefaultMode();
+    }
   }
 
   disconnectedCallback() {
     window.removeEventListener("scroll", this.handleScroll);
   }
 
-  setupProjectMode() {
-    const isProjectPage = this.hasAttribute("project-page");
-    const projectName = this.getAttribute("project-name") || "";
+  /* ── DEFAULT MODE ──────────────────────────────────────────── */
+  setupDefaultMode() {
+    // Desktop center nav
+    this.navCenter.innerHTML = `
+      <ul class="nav-links">
+        <li><a href="index.html">WORKS</a></li>
+        <li><a href="archive.html">PLAYGROUND</a></li>
+        <li><a href="about.html">ABOUT</a></li>
+        <li><a href="mailto:ninalle.65@gmail.com">RESUME</a></li>
+      </ul>
+    `;
+    this.setActiveLink();
 
-    if (isProjectPage) {
-      this.header.classList.add("project-mode");
+    // Mobile right: hamburger that opens the same links
+    this.navRight.innerHTML = `
+      <div class="hamburger-button" id="ham-btn">
+        <img src="ham.svg" alt="Menu" id="ham-icon" />
+      </div>
+      <div class="ham-dropdown" id="ham-dropdown">
+        <a href="index.html">WORKS</a>
+        <a href="archive.html">PLAYGROUND</a>
+        <a href="about.html">ABOUT</a>
+        <a href="mailto:ninalle.65@gmail.com">RESUME</a>
+      </div>
+    `;
 
-      const allProjects = [
-        { name: "Here:after", link: "hereafter.html" },
-        { name: "Accessichat", link: "accessichat.html" },
-        {
-          name: "The Digital Music Box",
-          link: "https://editor.p5js.org/ninistar/full/bu9tv-CMp",
-        },
-        {
-          name: "The Purrfect Supper",
-          link: "https://editor.p5js.org/ninistar/full/UL27yTVgl",
-        },
-        { name: "Dear Diary", link: "https://youtu.be/WAzITLPvqEU" },
-      ];
+    const hamBtn      = this.shadowRoot.getElementById("ham-btn");
+    const hamIcon     = this.shadowRoot.getElementById("ham-icon");
+    const hamDropdown = this.shadowRoot.getElementById("ham-dropdown");
 
-      const filteredProjects = allProjects.filter((p) => {
-        const currentPage = window.location.pathname;
-        return !currentPage.includes(p.link.replace(".html", ""));
-      });
+    hamBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const open = hamDropdown.classList.toggle("show");
+      hamIcon.src = open ? "close.svg" : "ham.svg";
+    });
 
-      const projectButtonHTML = `
-        <div class="dropdown" id="project-dropdown-container">
-          <div class="project-button" id="project-btn">
-            WORKS/${projectName}
-          </div>
-          <div class="dropdown-content" id="project-dropdown">
-            ${filteredProjects.map((p) => `<a href="${p.link}" target="_blank">${p.name}</a>`).join("")}
-          </div>
-        </div>
-      `;
-
-      const closeButtonHTML = `
-        <a href="index.html" class="close-button" title="Back to Works">
-          <img src="close.svg" alt="Close" />
-        </a>
-      `;
-
-      const centerNavHTML = `
-        <ul class="nav-links">
-          <li><a href="archive.html">PLAYGROUND</a></li>
-          <li><a href="about.html">ABOUT</a></li>
-          <li><a href="mailto:ninalle.65@gmail.com">RESUME</a></li>
-        </ul>
-      `;
-
-      this.navLeft.innerHTML = projectButtonHTML;
-      this.navCenter.innerHTML = centerNavHTML;
-      this.navRight.innerHTML = closeButtonHTML;
-
-      const projectBtn = this.shadowRoot.getElementById("project-btn");
-      const dropdown = this.shadowRoot.getElementById("project-dropdown");
-
-      projectBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        dropdown.classList.toggle("show");
-      });
-
-      document.addEventListener("click", () => {
-        dropdown.classList.remove("show");
-      });
-    }
+    document.addEventListener("click", () => {
+      hamDropdown.classList.remove("show");
+      if (hamIcon) hamIcon.src = "ham.svg";
+    });
   }
 
+  /* ── PROJECT MODE ──────────────────────────────────────────── */
+  setupProjectMode() {
+    const projectName = this.getAttribute("project-name") || "";
+
+    const allProjects = [
+      { name: "Here:after",           link: "hereafter.html" },
+      { name: "Accessichat",          link: "accessichat.html" },
+      { name: "The Digital Music Box", link: "https://editor.p5js.org/ninistar/full/bu9tv-CMp" },
+      { name: "The Purrfect Supper",  link: "https://editor.p5js.org/ninistar/full/UL27yTVgl" },
+      { name: "Dear Diary",           link: "https://youtu.be/WAzITLPvqEU" },
+    ];
+
+    const filteredProjects = allProjects.filter((p) => {
+      return !window.location.pathname.includes(p.link.replace(".html", ""));
+    });
+
+    const projectLinksHTML = filteredProjects
+      .map((p) => `<a href="${p.link}" target="_blank">${p.name}</a>`)
+      .join("");
+
+    // LEFT: WORKS/project dropdown
+    this.navLeft.innerHTML = `
+      <div class="dropdown" id="proj-dropdown-wrap">
+        <div class="project-button" id="proj-btn">
+          WORKS/${projectName}
+        </div>
+        <div class="dropdown-content" id="proj-dropdown">
+          ${projectLinksHTML}
+        </div>
+      </div>
+    `;
+
+    // CENTER (desktop only): secondary nav
+    this.navCenter.innerHTML = `
+      <ul class="nav-links">
+        <li><a href="archive.html">PLAYGROUND</a></li>
+        <li><a href="about.html">ABOUT</a></li>
+        <li><a href="mailto:ninalle.65@gmail.com">RESUME</a></li>
+      </ul>
+    `;
+    this.setActiveLink();
+
+    // RIGHT: close only (no hamburger in project mode, on any screen size for mobile)
+    this.navRight.innerHTML = `
+      <a href="index.html" class="close-button" title="Back to Works">
+        <img src="close.svg" alt="Close" />
+      </a>
+    `;
+
+    // Project dropdown
+    const projBtn      = this.shadowRoot.getElementById("proj-btn");
+    const projDropdown = this.shadowRoot.getElementById("proj-dropdown");
+
+    projBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      projDropdown.classList.toggle("show");
+    });
+
+    // Close on outside click
+    document.addEventListener("click", () => {
+      projDropdown.classList.remove("show");
+    });
+  }
+
+  /* ── HELPERS ───────────────────────────────────────────────── */
   setActiveLink() {
     const currentPath = window.location.pathname;
-    const links = this.shadowRoot.querySelectorAll(".nav-links a");
-
-    links.forEach((link) => {
-      const linkPath = link.getAttribute("href");
-
-      if (currentPath.includes(linkPath) && linkPath !== "") {
+    this.shadowRoot.querySelectorAll(".nav-links a").forEach((link) => {
+      const href = link.getAttribute("href");
+      if (href && currentPath.includes(href.replace(".html", "")) && href !== "") {
         link.classList.add("active");
-      } else if (currentPath === "/" && linkPath === "index.html") {
+      } else if (currentPath === "/" && href === "index.html") {
         link.classList.add("active");
       }
     });
@@ -409,10 +442,10 @@ class Header extends HTMLElement {
 
   handleScroll() {
     if (window.innerWidth > 768) {
-      const scrollY = window.scrollY;
-      const totalHeight = document.documentElement.scrollHeight;
+      const scrollY      = window.scrollY;
+      const totalHeight  = document.documentElement.scrollHeight;
       const windowHeight = window.innerHeight;
-      const threshold = 600;
+      const threshold    = 600;
 
       if (scrollY + windowHeight > totalHeight - threshold) {
         this.container.classList.add("hidden");
@@ -422,12 +455,6 @@ class Header extends HTMLElement {
     } else {
       this.container.classList.remove("hidden");
     }
-  }
-
-  toggleMenu() {
-    const isMenuOpen = this.navLinks.classList.contains("open");
-    this.navLinks.classList.toggle("open", !isMenuOpen);
-    this.hamburgerIcon.src = isMenuOpen ? "ham.svg" : "close.svg";
   }
 }
 
