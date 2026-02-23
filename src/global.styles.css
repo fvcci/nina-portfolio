@@ -223,7 +223,7 @@ Prevents scrollbars if canvas is full screen */
   --grid-line-2: 37%;
   --grid-line-3: 63%;
   --grid-line-4: 90%;
-  --grid-crosshair-y: 40px;
+  --grid-crosshair-y: 20px;
   /* Colors from config - full opacity */
   --crosshair-color: #272630;
   --grid-line-color: #dedcdc;
@@ -361,7 +361,7 @@ Prevents scrollbars if canvas is full screen */
 .projects-with-grid::after {
   content: "";
   position: absolute;
-  top: 20px;
+  top: 0;
   left: var(--grid-line-1);
   right: calc(100% - var(--grid-line-4));
   height: 1px;
