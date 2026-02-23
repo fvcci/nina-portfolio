@@ -256,17 +256,17 @@ function initSketch() {
           p.resetMatrix();
           let msg = "play song";
           p.textFont("Fragment Mono");
-          p.textSize(12);
+          p.textSize(14);
           let tw = p.textWidth(msg);
 
           p.noStroke();
           p.fill(0, 180); // Translucent black
           p.rectMode(p.CENTER);
-          p.rect(p.mouseX + 45, p.mouseY, tw + 12, 18, 4);
+          p.rect(p.mouseX + 38, p.mouseY - 10, tw + 32, 36, 10);
 
           p.fill("#fcfcfc");
           p.textAlign(p.CENTER, p.CENTER);
-          p.text(msg, p.mouseX + 45, p.mouseY);
+          p.text(msg, p.mouseX + 38, p.mouseY - 10);
           p.pop();
         } else if (lastHoveredIndex === i) {
           lastHoveredIndex = -1; // Reset when mouse leaves

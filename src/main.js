@@ -10,8 +10,8 @@ tooltip.style.cssText = `
   position: fixed;
   background: rgba(0, 0, 0, 0.7);
   color: #fcfcfc;
-  padding: 4px 8px;
-  border-radius: 4px;
+  padding: 8px 16px;
+  border-radius: 10px;
   font-family: 'Fragment Mono', monospace;
   font-size: 14px;
   pointer-events: none;
@@ -45,8 +45,8 @@ document.addEventListener("mousemove", (e) => {
 
   if (shouldShow) {
     tooltip.style.opacity = "1";
-    tooltip.style.left = e.clientX + 45 + "px";
-    tooltip.style.top = e.clientY + "px";
+    tooltip.style.left = e.clientX + 5 + "px";
+    tooltip.style.top = e.clientY - 28 + "px";
   } else {
     tooltip.style.opacity = "0";
   }
