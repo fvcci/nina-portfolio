@@ -171,6 +171,13 @@
       }
     </style>
 
+    <style>
+      .label {
+        font-family: "Fragment Mono", monospace;
+        font-size: 14px;
+      }
+    </style>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.sound.min.js"></script>
   </head>
@@ -194,23 +201,60 @@
           <!-- Left Content Section -->
           <div class="flex flex-col gap-8 md:gap-12 xl:gap-14 z-10 relative">
             <div class="flex flex-col gap-4">
-              <h3 class="z-20">Hey, I am Nina</h3>
 
-              <h4 class="smolwidth">
-                As a ux/ui designer, I bring a multidisciplinary approach
-                that combines aesthetic sensibility with functional precision.
-                My background in both design and development allows me to create
-                experiences that are not only visually compelling but
-                technically sound.
-              </h4>
+          <div class="flex flex-col w-full gap-4 2xl:px-16 pb-8">
+              <h3 class="z-20"> Hi, I am Nina. As a ux/ui designer, I bring a multidisciplinary approach that
+                    combines aesthetic sensibility with functional precision.</h3>
+              <p class="smolwidth z-20 text-gray-500">
+                // My
+                    background in both design and development allows me to create
+                    experiences that are visually compelling and seamlessly functional
+              </p>
+        </div>
+           
+              
+
+
+              <h3 class="smolwidth pb-8">
+ 
+              <div class="flex flex-col gap-4">
+              
+                <p class=" text-gray-500">[EXPERIENCE]</p>
+                <div>
+                <p class="">Product Manager @ Radiate (YorkU)</p>
+                <h6>Led product design and cross-team coordination for the graduate show, overseeing timelines, usability testing, and a scalable design system.</h6>
+
+                </div>
+
+                <div>
+                  <p>User Experience Intern @ Genesys Cloud</p>
+                <h6>Drove UX research and product strategy for a B2B SaaS platform by analyzing competitor design systems and translating usability insights into a prioritized feature roadmap.</h6>
+                </div>
+
+                <div>
+                  <p>UX/UI Intern @ Goodself</p>
+                <h6>Designed and built a compliant, cross-platform design system and navigation structure from scratch while roadmapping a regulated medical tracking feature.</h6>
+
+
+                </div>
+
+               <div>
+                <p>Product Design Intern @ Exomis Design + Development</p>
+                <h6>Created research-backed user personas and journey maps to inform responsive, cross-device design decisions that improved retention and engagement.</h6>
+
+               </div>
+                
+                
+                
+              </div>
             </div>
           </div>
           <!-- Right Image Section -->
           <div class="w-full z-10 relative">
             <img
-              src="profile.png"
+              src="profile.jpg"
               alt="Profile picture of Nina Le"
-              class="rounded-3xl w-full h-auto lg:h-[524px] 2xl:h-[800px] object-cover object-center"
+              class="rounded-3xl w-3/4 h-auto lg:h-[672px] 2xl:h-[800px] object-cover object-center"
             />
           </div>
         </div>
@@ -241,11 +285,12 @@
                 <img src="rgd.png" class="w-4/6 h-auto" />
               </div>
               <div class="flex flex-col gap-2">
-                <h6>RGD AWARDS x2</h6>
-                <h4>
-                  (1) 1st Place, UXD (2) Honourable Mention in Augmented
-                  Creativity
-                </h4>
+                <h6 class="label text-gray-500">[RGD AWARDS]</h6>
+                <p class="text-gray-500">
+                  <span class="label text-gray-500">[1]</span> 1st Place, UXD
+                  <span class="label text-gray-500">[2]</span> Honourable Mention in
+                  Augmented Creativity
+                </p>
               </div>
             </div>
 
@@ -258,8 +303,11 @@
                 <img src="dubstech.png" class="w-4/6 h-auto" />
               </div>
               <div class="flex flex-col gap-2">
-                <h6>DUBSTECH</h6>
-                <h4>(3) 3rd Place, Gaming Track - UXD Spring Hackathon</h4>
+                <h6 class="label text-gray-500">[DUBSTECH]</h6>
+                <p class="text-gray-500">
+                  <span class="label text-gray-500">[3]</span> 3rd Place, Gaming Track
+                  - UXD Spring Hackathon
+                </p>
               </div>
             </div>
 
@@ -272,8 +320,12 @@
                 <img src="dsa.png" class="w-2/6 h-auto" />
               </div>
               <div class="flex flex-col gap-2">
-                <h6>DSA DESN'ATHON x2</h6>
-                <h4>(4) 2nd Place, Student Leadership (5) Sustainability</h4>
+                <h6 class="label text-gray-500">[DSA DESN'ATHON]</h6>
+                <p class="text-gray-500">
+                  <span class="label text-gray-500">[4]</span> 2nd Place, Student
+                  Leadership
+                  <span class="label text-gray-500">[5]</span> Sustainability
+                </p>
               </div>
             </div>
           </div>
@@ -298,42 +350,42 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             <div class="z-10 relative">
               <img src="tea.jpg" class="w-full h-auto rounded-lg" />
-              <h4>↑ At afternoon tea; find the decoden phone case I made!</h4>
+              <p class="text-gray-500">// At afternoon tea; find the decoden phone case I made!</p>
             </div>
 
             <div class="z-10 relative">
               <img src="code.jpg" class="w-full h-auto rounded-lg" />
-              <h4>
-                ↑ Coding! I have been coding with HTML, CSS/Tailwind, and some
+              <p class="text-gray-500">
+                // Coding! I have been coding with HTML, CSS/Tailwind, and some
                 Javascript. Currently looking into Python...
-              </h4>
+              </p>
             </div>
 
             <div class="z-10 relative">
               <img src="wip.jpg" class="w-full h-auto rounded-lg" />
-              <h4>
-                ↑ Making all kinds of art. Pivoting a bit from illustration,
+              <p class="text-gray-500">
+                // Making all kinds of art. Pivoting a bit from illustration,
                 I've recently been sculpting mini clay figurines >:)
-              </h4>
+              </p>
             </div>
 
             <div class="z-10 relative">
               <img src="frogs.jpg" class="w-full h-auto rounded-lg" />
-              <h4>
-                ↑ Showing off work I am proud of - including the final form of
+              <p class="text-gray-500">
+                // Showing off work I am proud of - including the final form of
                 my clay frogs
-              </h4>
+              </p>
             </div>
 
             <div class="z-10 relative">
               <img src="aqua.jpg" class="w-full h-auto rounded-lg" />
-              <h4>↑ Admiring sea life at Ripley's Aquarium</h4>
+              <p class="text-gray-500">// Admiring sea life at Ripley's Aquarium</p>
             </div>
 
             <div class="z-10 relative">
               <img src="emo.jpg" class="w-full h-auto rounded-lg" />
-              <h4>
-                ↑ Listening and belting to emo music (I am a great singer,
+              <p class="text-gray-500">
+                // Listening and belting to emo music (I am a great singer,
                 trust)
               </h4>
             </div>
