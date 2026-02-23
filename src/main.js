@@ -52,18 +52,6 @@ document.addEventListener("mousemove", (e) => {
   }
 });
 
-// Dynamically load another JavaScript file (additional.js)
-const script = document.createElement("script");
-script.src = "cursor.js"; // Path to the additional JS file
-script.type = "text/javascript";
-script.async = true; // Load asynchronously
-document.head.appendChild(script);
-
-// Optional: Add a callback after the script is loaded
-script.onload = function () {
-  console.log("cursor.js has been loaded!");
-};
-
 // Helper to build the media element (video or image)
 function getMediaHTML(card, imageClass, hasHover = false) {
   const hoverClass = hasHover

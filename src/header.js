@@ -122,7 +122,7 @@ headerTemplate.innerHTML = /* html */ `
       <nav>
         <img src="ham.svg" id="hamburger-icon" alt="Menu" />
         <ul class="nav-links">
-          <li><a href="index.html">HOME</a></li>
+          <li><a href="index.html">WORKS</a></li>
           <li><a href="archive.html">PLAYGROUND</a></li>
           <li><a href="about.html">ABOUT</a></li>
           <li><a href="mailto:ninalle.65@gmail.com">RESUME</a></li>
