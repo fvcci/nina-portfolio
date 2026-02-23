@@ -102,6 +102,10 @@ class FooterComponent extends HTMLElement {
           background: #6f76c8;
         }
 
+        .social-links a.github:hover {
+          background: #C06AE2;
+        }
+
         .social-links a.email:hover {
           background: #33b0b0;
         }
@@ -162,6 +166,7 @@ class FooterComponent extends HTMLElement {
           .nav-links a:hover,
           .social-links a:hover,
           .social-links a.linkedin:hover,
+          .social-links a.github:hover,
           .social-links a.email:hover {
             background-color: transparent;
             color: inherit;
@@ -180,7 +185,7 @@ class FooterComponent extends HTMLElement {
             <li><a href="index.html">HOME</a></li>
             <li><a href="archive.html">PLAYGROUND</a></li>
             <li><a href="about.html">ABOUT</a></li>
-            <li><a href="mailto:ninalle.65@gmail.com">RESUME</a></li>
+            <li><a href="https://drive.google.com/file/d/1sD1fMjfXNEWNiBkKbNERJu5LpGkz4HdC/view?usp=sharing" target="_blank">RESUME</a></li>
           </ul>
         </nav>
 
@@ -188,6 +193,9 @@ class FooterComponent extends HTMLElement {
           <div class="social-links">
             <a class="linkedin" href="https://www.linkedin.com/in/ninale65/" target="_blank" aria-label="LinkedIn">
               <i class="fa-brands fa-linkedin-in"></i>
+            </a>
+            <a class="github" href="https://github.com/ninaxle" target="_blank" aria-label="GitHub">
+              <i class="fa-brands fa-github"></i>
             </a>
             <!-- <a class="instagram" href="https://www.instagram.com/ninmedias/" target="_blank" aria-label="Instagram">
               <i class="fa-brands fa-instagram"></i>

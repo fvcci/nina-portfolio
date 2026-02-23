@@ -159,7 +159,13 @@ function createCards(sectionSelector, cardsData, isBrandSection = false) {
           ${card.description ? `<p class="text-gray-500">${card.description}</p>` : ""}
         </div>
       `;
-      cardDiv.innerHTML = `<a href="${card.link}" class="space-y-4">${cardContent}</a>`;
+      const isExternal =
+        card.link &&
+        (card.link.startsWith("http://") || card.link.startsWith("https://"));
+      const targetAttr = isExternal
+        ? ' target="_blank" rel="noopener noreferrer"'
+        : "";
+      cardDiv.innerHTML = `<a href="${card.link}" class="space-y-4"${targetAttr}>${cardContent}</a>`;
     } else {
       // Only add tooltip class for cards WITHOUT links
       cardDiv.classList.add("has-tooltip");
