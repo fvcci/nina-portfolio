@@ -32,7 +32,7 @@
     />
     <title>Nina's Portfoilo</title>
     <style>
-      /* Override grid for archive page */
+      /* Archive hero - progressive grid lines */
       .archive-hero .grid-lines {
         background-image:
           linear-gradient(
@@ -40,23 +40,45 @@
             var(--grid-line-color) 1px,
             transparent 1px
           ),
-          linear-gradient(
-            to right,
-            var(--grid-line-color) 1px,
-            transparent 1px
-          ),
           linear-gradient(to right, var(--grid-line-color) 1px, transparent 1px);
         background-size:
-          1px 100%,
           1px 100%,
           1px 100%;
         background-position:
           var(--grid-line-1) 0,
-          var(--grid-line-3) 0,
           var(--grid-line-4) 0;
         background-repeat: no-repeat;
       }
+      @media (min-width: 1024px) {
+        .archive-hero .grid-lines {
+          background-image:
+            linear-gradient(
+              to right,
+              var(--grid-line-color) 1px,
+              transparent 1px
+            ),
+            linear-gradient(
+              to right,
+              var(--grid-line-color) 1px,
+              transparent 1px
+            ),
+            linear-gradient(
+              to right,
+              var(--grid-line-color) 1px,
+              transparent 1px
+            );
+          background-size:
+            1px 100%,
+            1px 100%,
+            1px 100%;
+          background-position:
+            var(--grid-line-1) 0,
+            var(--grid-line-3) 0,
+            var(--grid-line-4) 0;
+        }
+      }
 
+      /* Archive projects - progressive grid lines */
       .archive-projects .grid-lines {
         background-image:
           linear-gradient(
@@ -64,28 +86,77 @@
             var(--grid-line-color) 1px,
             transparent 1px
           ),
-          linear-gradient(
-            to right,
-            var(--grid-line-color) 1px,
-            transparent 1px
-          ),
-          linear-gradient(
-            to right,
-            var(--grid-line-color) 1px,
-            transparent 1px
-          ),
           linear-gradient(to right, var(--grid-line-color) 1px, transparent 1px);
         background-size:
-          1px 100%,
-          1px 100%,
           1px 100%,
           1px 100%;
         background-position:
           var(--grid-line-1) 0,
-          var(--grid-line-2) var(--grid-crosshair-y),
-          var(--grid-line-3) var(--grid-crosshair-y),
           var(--grid-line-4) 0;
         background-repeat: no-repeat;
+      }
+      @media (min-width: 768px) {
+        .archive-projects .grid-lines {
+          background-image:
+            linear-gradient(
+              to right,
+              var(--grid-line-color) 1px,
+              transparent 1px
+            ),
+            linear-gradient(
+              to right,
+              var(--grid-line-color) 1px,
+              transparent 1px
+            ),
+            linear-gradient(
+              to right,
+              var(--grid-line-color) 1px,
+              transparent 1px
+            );
+          background-size:
+            1px 100%,
+            1px 100%,
+            1px calc(100% - var(--grid-crosshair-y));
+          background-position:
+            var(--grid-line-1) 0,
+            var(--grid-line-2) var(--grid-crosshair-y),
+            var(--grid-line-4) 0;
+        }
+      }
+      @media (min-width: 1024px) {
+        .archive-projects .grid-lines {
+          background-image:
+            linear-gradient(
+              to right,
+              var(--grid-line-color) 1px,
+              transparent 1px
+            ),
+            linear-gradient(
+              to right,
+              var(--grid-line-color) 1px,
+              transparent 1px
+            ),
+            linear-gradient(
+              to right,
+              var(--grid-line-color) 1px,
+              transparent 1px
+            ),
+            linear-gradient(
+              to right,
+              var(--grid-line-color) 1px,
+              transparent 1px
+            );
+          background-size:
+            1px 100%,
+            1px calc(100% - var(--grid-crosshair-y)),
+            1px calc(100% - var(--grid-crosshair-y)),
+            1px 100%;
+          background-position:
+            var(--grid-line-1) 0,
+            var(--grid-line-2) var(--grid-crosshair-y),
+            var(--grid-line-3) var(--grid-crosshair-y),
+            var(--grid-line-4) 0;
+        }
       }
 
       .archive-projects::after {
@@ -132,8 +203,6 @@
 
       <section class="projects-with-grid archive-projects pb-8 lg:pb-24">
         <div class="grid-lines"></div>
-        <div class="grid-crosshair left"></div>
-        <div class="grid-crosshair right"></div>
 
         <div class="px-4 sm:px-10 md:px-10 lg:px-16 2xl:px-16">
           <div

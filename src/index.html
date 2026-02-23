@@ -39,6 +39,106 @@
       href="https://fonts.googleapis.com/css2?family=Fragment+Mono&display=swap"
       rel="stylesheet"
     />
+    <style>
+      /* Hero section - progressive grid lines */
+      .hero-with-grid .grid-lines {
+        background-image:
+          linear-gradient(
+            to right,
+            var(--grid-line-color) 1px,
+            transparent 1px
+          ),
+          linear-gradient(to right, var(--grid-line-color) 1px, transparent 1px);
+        background-size:
+          1px 100%,
+          1px 100%;
+        background-position:
+          var(--grid-line-1) 0,
+          var(--grid-line-4) 0;
+        background-repeat: no-repeat;
+      }
+
+      /* Projects section - progressive grid lines */
+      .projects-with-grid .grid-lines {
+        background-image:
+          linear-gradient(
+            to right,
+            var(--grid-line-color) 1px,
+            transparent 1px
+          ),
+          linear-gradient(to right, var(--grid-line-color) 1px, transparent 1px);
+        background-size:
+          1px 100%,
+          1px 100%;
+        background-position:
+          var(--grid-line-1) 0,
+          var(--grid-line-4) 0;
+        background-repeat: no-repeat;
+      }
+      @media (min-width: 768px) {
+        .projects-with-grid .grid-lines {
+          background-image:
+            linear-gradient(
+              to right,
+              var(--grid-line-color) 1px,
+              transparent 1px
+            ),
+            linear-gradient(
+              to right,
+              var(--grid-line-color) 1px,
+              transparent 1px
+            ),
+            linear-gradient(
+              to right,
+              var(--grid-line-color) 1px,
+              transparent 1px
+            );
+          background-size:
+            1px 100%,
+            1px 100%,
+            1px calc(100% - var(--grid-crosshair-y));
+          background-position:
+            var(--grid-line-1) 0,
+            var(--grid-line-2) var(--grid-crosshair-y),
+            var(--grid-line-4) 0;
+        }
+      }
+      @media (min-width: 1024px) {
+        .projects-with-grid .grid-lines {
+          background-image:
+            linear-gradient(
+              to right,
+              var(--grid-line-color) 1px,
+              transparent 1px
+            ),
+            linear-gradient(
+              to right,
+              var(--grid-line-color) 1px,
+              transparent 1px
+            ),
+            linear-gradient(
+              to right,
+              var(--grid-line-color) 1px,
+              transparent 1px
+            ),
+            linear-gradient(
+              to right,
+              var(--grid-line-color) 1px,
+              transparent 1px
+            );
+          background-size:
+            1px 100%,
+            1px calc(100% - var(--grid-crosshair-y)),
+            1px calc(100% - var(--grid-crosshair-y)),
+            1px 100%;
+          background-position:
+            var(--grid-line-1) 0,
+            var(--grid-line-2) var(--grid-crosshair-y),
+            var(--grid-line-3) var(--grid-crosshair-y),
+            var(--grid-line-4) 0;
+        }
+      }
+    </style>
     <!-- p5.js library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.sound.min.js"></script>
