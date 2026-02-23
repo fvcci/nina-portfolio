@@ -157,6 +157,16 @@ class FooterComponent extends HTMLElement {
             justify-content: center;
             gap: 0.75rem;
           }
+
+          /* Disable hover states on mobile */
+          .nav-links a:hover,
+          .social-links a:hover,
+          .social-links a.linkedin:hover,
+          .social-links a.email:hover {
+            background-color: transparent;
+            color: inherit;
+            transform: none;
+          }
         }
       </style>
 

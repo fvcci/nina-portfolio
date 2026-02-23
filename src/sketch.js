@@ -142,10 +142,11 @@ function initSketch() {
 
     function layoutNotes() {
       let w = p.windowWidth;
+      let isMobile = w < 768;
       let margin = w < 600 ? 20 : 60;
       let maxLineWidth = w - margin * 2;
-      let rowHeight = 110;
-      let y = 80;
+      let rowHeight = isMobile ? 50 : 110;
+      let y = isMobile ? 16 : 80;
 
       // Group notes into rows first to calculate centering
       let rows = [[]];

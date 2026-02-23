@@ -279,6 +279,17 @@ headerTemplate.innerHTML = /* html */ `
         left: 0;
         top: calc(100% + 0.75rem);
       }
+
+      /* Disable hover states on mobile */
+      .nav-links a:hover,
+      .project-button:hover,
+      .close-button:hover,
+      .hamburger-button:hover,
+      .dropdown-content a:hover,
+      .ham-dropdown a:hover {
+        background-color: transparent;
+        color: inherit;
+      }
     }
   </style>
 
@@ -297,11 +308,11 @@ class Header extends HTMLElement {
     const shadowRoot = this.attachShadow({ mode: "open" });
     shadowRoot.appendChild(headerTemplate.content.cloneNode(true));
 
-    this.container  = shadowRoot.getElementById("header-container");
-    this.navLeft    = shadowRoot.getElementById("nav-left");
-    this.navCenter  = shadowRoot.getElementById("nav-center");
-    this.navRight   = shadowRoot.getElementById("nav-right");
-    this.header     = shadowRoot.querySelector("header");
+    this.container = shadowRoot.getElementById("header-container");
+    this.navLeft = shadowRoot.getElementById("nav-left");
+    this.navCenter = shadowRoot.getElementById("nav-center");
+    this.navRight = shadowRoot.getElementById("nav-right");
+    this.header = shadowRoot.querySelector("header");
 
     this.handleScroll = this.handleScroll.bind(this);
   }
@@ -347,8 +358,8 @@ class Header extends HTMLElement {
       </div>
     `;
 
-    const hamBtn      = this.shadowRoot.getElementById("ham-btn");
-    const hamIcon     = this.shadowRoot.getElementById("ham-icon");
+    const hamBtn = this.shadowRoot.getElementById("ham-btn");
+    const hamIcon = this.shadowRoot.getElementById("ham-icon");
     const hamDropdown = this.shadowRoot.getElementById("ham-dropdown");
 
     hamBtn.addEventListener("click", (e) => {
@@ -368,11 +379,17 @@ class Header extends HTMLElement {
     const projectName = this.getAttribute("project-name") || "";
 
     const allProjects = [
-      { name: "Here:after",           link: "hereafter.html" },
-      { name: "Accessichat",          link: "accessichat.html" },
-      { name: "The Digital Music Box", link: "https://editor.p5js.org/ninistar/full/bu9tv-CMp" },
-      { name: "The Purrfect Supper",  link: "https://editor.p5js.org/ninistar/full/UL27yTVgl" },
-      { name: "Dear Diary",           link: "https://youtu.be/WAzITLPvqEU" },
+      { name: "Here:after", link: "hereafter.html" },
+      { name: "Accessichat", link: "accessichat.html" },
+      {
+        name: "The Digital Music Box",
+        link: "https://editor.p5js.org/ninistar/full/bu9tv-CMp",
+      },
+      {
+        name: "The Purrfect Supper",
+        link: "https://editor.p5js.org/ninistar/full/UL27yTVgl",
+      },
+      { name: "Dear Diary", link: "https://youtu.be/WAzITLPvqEU" },
     ];
 
     const filteredProjects = allProjects.filter((p) => {
@@ -413,7 +430,7 @@ class Header extends HTMLElement {
     `;
 
     // Project dropdown
-    const projBtn      = this.shadowRoot.getElementById("proj-btn");
+    const projBtn = this.shadowRoot.getElementById("proj-btn");
     const projDropdown = this.shadowRoot.getElementById("proj-dropdown");
 
     projBtn.addEventListener("click", (e) => {
@@ -432,7 +449,11 @@ class Header extends HTMLElement {
     const currentPath = window.location.pathname;
     this.shadowRoot.querySelectorAll(".nav-links a").forEach((link) => {
       const href = link.getAttribute("href");
-      if (href && currentPath.includes(href.replace(".html", "")) && href !== "") {
+      if (
+        href &&
+        currentPath.includes(href.replace(".html", "")) &&
+        href !== ""
+      ) {
         link.classList.add("active");
       } else if (currentPath === "/" && href === "index.html") {
         link.classList.add("active");
@@ -442,10 +463,10 @@ class Header extends HTMLElement {
 
   handleScroll() {
     if (window.innerWidth > 768) {
-      const scrollY      = window.scrollY;
-      const totalHeight  = document.documentElement.scrollHeight;
+      const scrollY = window.scrollY;
+      const totalHeight = document.documentElement.scrollHeight;
       const windowHeight = window.innerHeight;
-      const threshold    = 600;
+      const threshold = 600;
 
       if (scrollY + windowHeight > totalHeight - threshold) {
         this.container.classList.add("hidden");

@@ -1,62 +1,75 @@
 // ============================================
 // COMPOSE IMAGE SETUP & FUNCTIONALITY
 // ============================================
-const composeImg = new Image();
-composeImg.src = 'compose.png'; 
-let imgLoaded = false;
+const isMobile =
+  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent,
+  );
 
-composeImg.style.position = 'fixed';
-composeImg.style.pointerEvents = 'none';
-composeImg.style.zIndex = '100000'; 
-composeImg.style.display = 'none'; 
-composeImg.style.width = '20px'; // Scaled down
-document.body.appendChild(composeImg);
+if (!isMobile) {
+  const composeImg = new Image();
+  composeImg.src = "compose.png";
+  let imgLoaded = false;
 
-composeImg.onload = () => { imgLoaded = true; };
-composeImg.onerror = () => { imgLoaded = false; };
+  composeImg.style.position = "fixed";
+  composeImg.style.pointerEvents = "none";
+  composeImg.style.zIndex = "100000";
+  composeImg.style.display = "none";
+  composeImg.style.width = "20px"; // Scaled down
+  document.body.appendChild(composeImg);
 
-let mouseX = 0, mouseY = 0;   
-let clientX = 0, clientY = 0; 
-let overSketch = false;
-let currentTarget = null; // Track exactly what we are hovering over
+  composeImg.onload = () => {
+    imgLoaded = true;
+  };
+  composeImg.onerror = () => {
+    imgLoaded = false;
+  };
 
-document.addEventListener("mousemove", (e) => {
-  mouseX = e.pageX;
-  mouseY = e.pageY;
-  clientX = e.clientX;
-  clientY = e.clientY;
-  currentTarget = e.target; // Capture the element
-  
-  // Check if we are over the p5.js canvas
-  overSketch = e.target.tagName === 'CANVAS' || e.target.classList.contains('p5Canvas'); 
-});
+  let mouseX = 0,
+    mouseY = 0;
+  let clientX = 0,
+    clientY = 0;
+  let overSketch = false;
+  let currentTarget = null; // Track exactly what we are hovering over
 
-function animateCursor() {
-  if (overSketch) {
-    if (imgLoaded) {
-      // Hide system mouse on the CANVAS specifically
-      if (currentTarget) currentTarget.style.cursor = 'none';
-      
-      // Show & Position PNG (Top-left corner hits mouse)
-      composeImg.style.display = 'block';
-      composeImg.style.left = `${clientX}px`;
-      composeImg.style.top = `${clientY}px`;
+  document.addEventListener("mousemove", (e) => {
+    mouseX = e.pageX;
+    mouseY = e.pageY;
+    clientX = e.clientX;
+    clientY = e.clientY;
+    currentTarget = e.target; // Capture the element
+
+    // Check if we are over the p5.js canvas
+    overSketch =
+      e.target.tagName === "CANVAS" || e.target.classList.contains("p5Canvas");
+  });
+
+  function animateCursor() {
+    if (overSketch) {
+      if (imgLoaded) {
+        // Hide system mouse on the CANVAS specifically
+        if (currentTarget) currentTarget.style.cursor = "none";
+
+        // Show & Position PNG (Top-left corner hits mouse)
+        composeImg.style.display = "block";
+        composeImg.style.left = `${clientX}px`;
+        composeImg.style.top = `${clientY}px`;
+      } else {
+        // Fallback: Image failed, show system mouse
+        if (currentTarget) currentTarget.style.cursor = "auto";
+        composeImg.style.display = "none";
+      }
     } else {
-      // Fallback: Image failed, show system mouse
-      if (currentTarget) currentTarget.style.cursor = 'auto';
-      composeImg.style.display = 'none';
+      // Normal Section: Reset everything
+      if (currentTarget) currentTarget.style.cursor = "default";
+      composeImg.style.display = "none";
     }
-  } else {
-    // Normal Section: Reset everything
-    if (currentTarget) currentTarget.style.cursor = 'default';
-    composeImg.style.display = 'none';
+
+    requestAnimationFrame(animateCursor);
   }
 
-  requestAnimationFrame(animateCursor);
+  animateCursor();
 }
-
-animateCursor();
-
 
 /* ============================================
    COMMENTED OUT: CIRCLE ANIMATED HOVER

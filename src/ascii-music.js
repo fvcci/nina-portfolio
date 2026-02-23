@@ -30,22 +30,26 @@ function initAsciiMusic() {
     let imgLoaded = false;
 
     p.preload = function () {
-      img = p.loadImage("music.png",
+      let isMobile = p.windowWidth < 768;
+      let resizeFactor = isMobile ? 8 : 3.5;
+      img = p.loadImage(
+        "music.png",
         () => {
           console.log("Image loaded successfully");
-          img.resize(img.width / 3.5, img.height / 3.5);
+          img.resize(img.width / resizeFactor, img.height / resizeFactor);
           imgLoaded = true;
         },
         () => {
           console.error("Failed to load image");
-        }
+        },
       );
     };
 
     p.setup = function () {
-      let displayWidth = 800;
-      let displayHeight = 400;
-
+      let isMobile = p.windowWidth < 768;
+      stepSize = isMobile ? 6 : 9;
+      let displayWidth = isMobile ? p.windowWidth : 800;
+      let displayHeight = isMobile ? p.windowWidth * 0.5 : 400;
       let cnv = p.createCanvas(displayWidth, displayHeight);
       cnv.parent("ascii-music-container");
       p.textFont("Doto");
@@ -55,8 +59,15 @@ function initAsciiMusic() {
       console.log("Canvas created:", displayWidth, displayHeight);
     };
 
+    p.windowResized = function () {
+      let isMobile = p.windowWidth < 768;
+      let displayWidth = isMobile ? p.windowWidth : 800;
+      let displayHeight = isMobile ? p.windowWidth * 0.5 : 400;
+      p.resizeCanvas(displayWidth, displayHeight);
+    };
+
     p.draw = function () {
-      p.background('#fcfcfc');
+      p.background("#fcfcfc");
 
       if (!imgLoaded || !img) {
         p.fill(0);
@@ -115,13 +126,21 @@ function initAsciiMusic() {
           let distFromMouse = p.dist(p.mouseX, p.mouseY, canvasX, canvasY);
 
           // Ripple & scan effects enhanced by mouse position
-          let ripple1 = p.sin(distFromMouse * 0.02 - t * 5 * mouseSpeed) * (100 + mouseChaos);
-          let ripple2 = p.cos(distFromMouse * 0.04 - t * 3 * mouseSpeed) * (50 + mouseChaos * 0.5);
-          let scan = p.sin(t * 2 * mouseSpeed + canvasY * 0.15) * (45 + mouseChaos);
+          let ripple1 =
+            p.sin(distFromMouse * 0.02 - t * 5 * mouseSpeed) *
+            (100 + mouseChaos);
+          let ripple2 =
+            p.cos(distFromMouse * 0.04 - t * 3 * mouseSpeed) *
+            (50 + mouseChaos * 0.5);
+          let scan =
+            p.sin(t * 2 * mouseSpeed + canvasY * 0.15) * (45 + mouseChaos);
           // Extra wave driven by mouse X position
-          let extraWave = p.sin(t * mouseSpeed * 1.5 + canvasX * 0.08 * (mx * 3 + 0.5)) * mouseChaos;
+          let extraWave =
+            p.sin(t * mouseSpeed * 1.5 + canvasX * 0.08 * (mx * 3 + 0.5)) *
+            mouseChaos;
 
-          let animatedBrightness = brightnessVal + scan + ripple1 + ripple2 + extraWave;
+          let animatedBrightness =
+            brightnessVal + scan + ripple1 + ripple2 + extraWave;
 
           let symbolIndex = p.floor(
             p.map(animatedBrightness, 0, 255, 0, symbols.length - 1),
