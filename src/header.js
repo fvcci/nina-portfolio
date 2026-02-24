@@ -7,195 +7,297 @@ headerTemplate.innerHTML = /* html */ `
       padding: 0;
       box-sizing: border-box;
       text-decoration: none;
+      font-family: "Fragment Mono", monospace;
+      letter-spacing: -0.04em;
+      font-weight: 400;
     }
 
     :host {
       display: block;
-    }
-
-    .container {
       position: fixed;
       top: 0;
       left: 0;
-      padding-left: 0;
-      padding-right: 0;
-      padding-top: 0;
+      width: 100%;
       z-index: 50;
+    }
+
+    /* ─── CONTAINER ─────────────────────────────────────────── */
+    .container {
       width: 100%;
+      display: flex;
+      justify-content: center;
+      pointer-events: none;
+      transition: opacity 0.4s ease, transform 0.4s ease;
     }
 
-    @media (min-width: 768px) {
-      .container {
-        padding-left: 2.5rem;
-        padding-right: 2.5rem;
-        padding-top: 1rem;
-      }
+    .container.hidden {
+      opacity: 0;
+      transform: translateY(-20px);
+      pointer-events: none;
     }
 
-    @media (min-width: 1536px) {
-      .container {
-        padding-left: 4rem;
-        padding-right: 4rem;
-      }
-    }
-
+    /* ─── HEADER PILL ───────────────────────────────────────── */
     header {
-      background: rgba(252, 252, 252, 1); /* Solid background */
-      width: 100%;
-      padding: 24px 28px;
-      border-radius: 16px;
+      background: rgba(252, 252, 252, 1);
+      width: auto;
+      min-width: min-content;
+      margin-top: 1rem;
+      padding: 8px;
+      border-radius: 20px;
       border: 1px solid #d3d3d3;
       transition: all 0.3s ease;
-    }
-
-    nav {
+      pointer-events: auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 4rem;
+      gap: 4px;
     }
 
-    .logo img {
-      height: 32px; /* Adjust height as needed */
+    /* ─── NAV LINKS ─────────────────────────────────────────── */
+    nav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
     }
 
     .nav-links {
       display: flex;
-      gap: 2.5rem;
+      gap: 4px;
       list-style: none;
       font-weight: 500;
+      align-items: center;
     }
 
-    li {
-      font-size: 20px;
-    }
+    li { font-size: 14px; }
 
-    a {
-      color: #282544;
-    }
-
-    .contact-button {
-      background-color: #211722;
-      color: #fcfcfc;
-      font-size: 20px;
-      font-weight: 500;
+    .nav-links a {
+      color: #8C8A98;
       padding: 8px 16px;
-      border: none;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+
+    .nav-links a:hover {
+      background-color: #f0f0f0;
+      color: #1B191B;
+    }
+
+    .nav-links a.active {
+      background-color: #1B191B !important;
+      color: #fff !important;
+    }
+
+    /* ─── PROJECT BUTTON ────────────────────────────────────── */
+    .project-button {
+      background-color: #1B191B;
+      color: #fff;
+      padding: 8px 16px;
       border-radius: 12px;
       cursor: pointer;
-      transition:
-        background-color 0.3s ease,
-        transform 0.2s ease;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      white-space: nowrap;
+      user-select: none;
     }
 
-    .contact-button:hover {
-      background-color: #5e3c49;
-      transform: scale(1.05);
+    .project-button:hover {
+      background-color: #333;
     }
 
-    #hamburger-icon {
-      display: none;
+    /* ─── CLOSE BUTTON ──────────────────────────────────────── */
+    .close-button {
       cursor: pointer;
-      height: 24px;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      transition: background 0.2s;
     }
 
-    @media (min-width: 1536px) {
-      .logo img {
-        height: 40px; /* Adjust height as needed */
-      }
-
-      li {
-        font-size: 24px;
-      }
-
-      .nav-links {
-        display: flex;
-        gap: 2.75rem;
-        list-style: none;
-        font-weight: 500;
-      }
-
-      .contact-button {
-        font-size: 24px;
-        padding: 8px 20px;
-        border: none;
-        border-radius: 12px;
-        cursor: pointer;
-        transition:
-          background-color 0.3s ease,
-          transform 0.2s ease;
-      }
+    .close-button:hover {
+      background-color: #f0f0f0;
     }
 
+    .close-button img {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* ─── HAMBURGER BUTTON ──────────────────────────────────── */
+    .hamburger-button {
+      cursor: pointer;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      transition: background 0.2s;
+    }
+
+    .hamburger-button:hover {
+      background-color: #f0f0f0;
+    }
+
+    .hamburger-button img {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* ─── DROPDOWN ──────────────────────────────────────────── */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: calc(100% + 0.5rem);
+      left: 0;
+      background: rgba(252, 252, 252, 1);
+      border: 1px solid #d3d3d3;
+      border-radius: 12px;
+      min-width: 220px;
+      z-index: 100;
+      padding: 8px 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .dropdown-content.show {
+      display: block;
+    }
+
+    .dropdown-content a {
+      color: #8C8A98;
+      padding: 10px 16px;
+      display: block;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #f0f0f0;
+      color: #1B191B;
+    }
+
+    /* ─── HAMBURGER MENU DROPDOWN ───────────────────────────── */
+    .ham-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 0.5rem);
+      right: 0;
+      background: rgba(252, 252, 252, 1);
+      border: 1px solid #d3d3d3;
+      border-radius: 12px;
+      min-width: 180px;
+      z-index: 100;
+      padding: 8px 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .ham-dropdown.show {
+      display: block;
+    }
+
+    .ham-dropdown a {
+      color: #8C8A98;
+      padding: 10px 16px;
+      display: block;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .ham-dropdown a:hover {
+      background-color: #f0f0f0;
+      color: #1B191B;
+    }
+
+    /* ─── NAV LAYOUT SLOTS ──────────────────────────────────── */
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .nav-center {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      position: relative;
+    }
+
+    /* Hamburger only shows on mobile (default mode) */
+    .hamburger-button {
+      display: none;
+    }
+
+    /* Project mode: hamburger never shows at all */
+    .project-ham {
+      display: none !important;
+    }
+
+    /* ─── MOBILE ────────────────────────────────────────────── */
     @media (max-width: 768px) {
+      .container {
+        justify-content: stretch;
+      }
+
       header {
         width: 100%;
-        top: 0px;
-        border: none;
-        border-bottom: 1px solid #d3d3d3;
+        margin-top: 0;
         border-radius: 0;
-        border-bottom-left-radius: 16px;
-        border-bottom-right-radius: 16px;
-        padding: 16px 24px;
-      }
-
-      .logo img {
-        height: 30px; /* Smaller logo size on mobile */
-      }
-
-      nav {
-        flex-direction: row;
-        justify-content: space-between;
-        gap: 1rem;
-      }
-
-      .nav-links {
-        flex-direction: column;
-        gap: 1.25rem;
-        display: none;
-        background: rgba(252, 252, 252, 1);
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
         padding: 16px;
-        margin: 8px;
-        border-radius: 16px;
-        border-top: none;
-        border: 1px solid #d3d3d3;
-        padding-bottom: 32px;
-        text-align: center;
-        align-items: center;
       }
 
-      .nav-links.open {
+      /* Hide desktop center nav on mobile */
+      .nav-center {
+        display: none;
+      }
+
+      /* Show hamburger on mobile (default mode only) */
+      .hamburger-button {
         display: flex;
       }
 
-      #hamburger-icon {
-        display: block;
+      .ham-dropdown {
+        right: 0;
+        top: calc(100% + 0.75rem);
+      }
+
+      .dropdown-content {
+        left: 0;
+        top: calc(100% + 0.75rem);
+      }
+
+      /* Disable hover states on mobile */
+      .nav-links a:hover,
+      .project-button:hover,
+      .close-button:hover,
+      .hamburger-button:hover,
+      .dropdown-content a:hover,
+      .ham-dropdown a:hover {
+        background-color: transparent;
+        color: inherit;
       }
     }
   </style>
 
-  <div class="container">
+  <div class="container" id="header-container">
     <header>
-      <nav>
-        <a href="index.html" class="logo">
-          <img src="logo88.png" alt="Logo" />
-        </a>
-        <img src="ham.svg" id="hamburger-icon" alt="Menu" />
-        <ul class="nav-links">
-          <li><a href="index.html">Projects</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="archive.html">Archive</a></li>
-          <li>
-            <a href="mailto:ninalle.65@gmail.com" class="contact-button">
-              Contact Me
-            </a>
-          </li>
-        </ul>
-      </nav>
+      <div class="nav-left" id="nav-left"></div>
+      <div class="nav-center" id="nav-center"></div>
+      <div class="nav-right" id="nav-right"></div>
     </header>
   </div>
 `;
@@ -206,18 +308,174 @@ class Header extends HTMLElement {
     const shadowRoot = this.attachShadow({ mode: "open" });
     shadowRoot.appendChild(headerTemplate.content.cloneNode(true));
 
-    this.headerElement = shadowRoot.querySelector("header");
-    this.hamburgerIcon = shadowRoot.getElementById("hamburger-icon");
-    this.navLinks = shadowRoot.querySelector(".nav-links");
+    this.container = shadowRoot.getElementById("header-container");
+    this.navLeft = shadowRoot.getElementById("nav-left");
+    this.navCenter = shadowRoot.getElementById("nav-center");
+    this.navRight = shadowRoot.getElementById("nav-right");
+    this.header = shadowRoot.querySelector("header");
 
-    this.hamburgerIcon.addEventListener("click", this.toggleMenu.bind(this));
+    this.handleScroll = this.handleScroll.bind(this);
   }
 
-  toggleMenu() {
-    const isMenuOpen = this.navLinks.classList.contains("open");
-    this.navLinks.classList.toggle("open", !isMenuOpen);
-    document.body.classList.toggle("no-scroll", !isMenuOpen);
-    this.hamburgerIcon.src = isMenuOpen ? "ham.svg" : "close.svg";
+  connectedCallback() {
+    window.addEventListener("scroll", this.handleScroll);
+
+    const isProjectPage = this.hasAttribute("project-page");
+    if (isProjectPage) {
+      this.setupProjectMode();
+    } else {
+      this.setupDefaultMode();
+    }
+  }
+
+  disconnectedCallback() {
+    window.removeEventListener("scroll", this.handleScroll);
+  }
+
+  /* ── DEFAULT MODE ──────────────────────────────────────────── */
+  setupDefaultMode() {
+    // Desktop center nav
+    this.navCenter.innerHTML = `
+      <ul class="nav-links">
+        <li><a href="index.html">WORKS</a></li>
+        <li><a href="archive.html">PLAYGROUND</a></li>
+        <li><a href="about.html">ABOUT</a></li>
+        <li><a href="https://drive.google.com/file/d/1sD1fMjfXNEWNiBkKbNERJu5LpGkz4HdC/view?usp=sharing" target="_blank">RESUME</a></li>
+      </ul>
+    `;
+    this.setActiveLink();
+
+    // Mobile right: hamburger that opens the same links
+    this.navRight.innerHTML = `
+      <div class="hamburger-button" id="ham-btn">
+        <img src="ham.svg" alt="Menu" id="ham-icon" />
+      </div>
+      <div class="ham-dropdown" id="ham-dropdown">
+        <a href="index.html">WORKS</a>
+        <a href="archive.html">PLAYGROUND</a>
+        <a href="about.html">ABOUT</a>
+        <a href="https://drive.google.com/file/d/1sD1fMjfXNEWNiBkKbNERJu5LpGkz4HdC/view?usp=sharing" target="_blank">RESUME</a>
+      </div>
+    `;
+
+    const hamBtn = this.shadowRoot.getElementById("ham-btn");
+    const hamIcon = this.shadowRoot.getElementById("ham-icon");
+    const hamDropdown = this.shadowRoot.getElementById("ham-dropdown");
+
+    hamBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const open = hamDropdown.classList.toggle("show");
+      hamIcon.src = open ? "close.svg" : "ham.svg";
+    });
+
+    document.addEventListener("click", () => {
+      hamDropdown.classList.remove("show");
+      if (hamIcon) hamIcon.src = "ham.svg";
+    });
+  }
+
+  /* ── PROJECT MODE ──────────────────────────────────────────── */
+  setupProjectMode() {
+    const projectName = this.getAttribute("project-name") || "";
+
+    const allProjects = [
+      { name: "Here:after", link: "hereafter.html" },
+      { name: "Accessichat", link: "accessichat.html" },
+      {
+        name: "The Digital Music Box",
+        link: "https://editor.p5js.org/ninistar/full/bu9tv-CMp",
+      },
+      {
+        name: "The Purrfect Supper",
+        link: "https://editor.p5js.org/ninistar/full/UL27yTVgl",
+      },
+      { name: "Dear Diary", link: "https://youtu.be/WAzITLPvqEU" },
+    ];
+
+    const filteredProjects = allProjects.filter((p) => {
+      return !window.location.pathname.includes(p.link.replace(".html", ""));
+    });
+
+    const projectLinksHTML = filteredProjects
+      .map((p) => `<a href="${p.link}" target="_blank">${p.name}</a>`)
+      .join("");
+
+    // LEFT: WORKS/project dropdown
+    this.navLeft.innerHTML = `
+      <div class="dropdown" id="proj-dropdown-wrap">
+        <div class="project-button" id="proj-btn">
+          WORKS/${projectName}
+        </div>
+        <div class="dropdown-content" id="proj-dropdown">
+          ${projectLinksHTML}
+        </div>
+      </div>
+    `;
+
+    // CENTER (desktop only): secondary nav
+    this.navCenter.innerHTML = `
+      <ul class="nav-links">
+        <li><a href="archive.html">PLAYGROUND</a></li>
+        <li><a href="about.html">ABOUT</a></li>
+        <li><a href="mailto:ninalle.65@gmail.com">RESUME</a></li>
+      </ul>
+    `;
+    this.setActiveLink();
+
+    // RIGHT: close only (no hamburger in project mode, on any screen size for mobile)
+    this.navRight.innerHTML = `
+      <a href="index.html" class="close-button" title="Back to Works">
+        <img src="close.svg" alt="Close" />
+      </a>
+    `;
+
+    // Project dropdown
+    const projBtn = this.shadowRoot.getElementById("proj-btn");
+    const projDropdown = this.shadowRoot.getElementById("proj-dropdown");
+
+    projBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      projDropdown.classList.toggle("show");
+    });
+
+    // Close on outside click
+    document.addEventListener("click", () => {
+      projDropdown.classList.remove("show");
+    });
+  }
+
+  /* ── HELPERS ───────────────────────────────────────────────── */
+  setActiveLink() {
+    const currentPath = window.location.pathname;
+    this.shadowRoot.querySelectorAll(".nav-links a").forEach((link) => {
+      const href = link.getAttribute("href");
+      if (
+        href &&
+        currentPath.includes(href.replace(".html", "")) &&
+        href !== ""
+      ) {
+        link.classList.add("active");
+      } else if (currentPath === "/" && href === "index.html") {
+        link.classList.add("active");
+      }
+    });
+  }
+
+  handleScroll() {
+    if (window.innerWidth > 768) {
+      const scrollY = window.scrollY;
+      const totalHeight = document.documentElement.scrollHeight;
+      const windowHeight = window.innerHeight;
+      const threshold = 600;
+
+      if (scrollY + windowHeight > totalHeight - threshold) {
+        this.container.classList.add("hidden");
+      } else {
+        this.container.classList.remove("hidden");
+      }
+    } else {
+      this.container.classList.remove("hidden");
+    }
   }
 }
 

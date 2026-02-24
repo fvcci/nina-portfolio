@@ -1,137 +1,238 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-E6RS5N28XQ"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-E6RS5N28XQ");
+    </script>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="global.styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Darker+Grotesque:wght@300..900&family=Syne:wght@400..800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      rel="stylesheet"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <title>Nina's Portfoilo</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Doto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fragment+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Hero section - progressive grid lines */
+      .hero-with-grid .grid-lines {
+        background-image:
+          linear-gradient(
+            to right,
+            var(--grid-line-color) 1px,
+            transparent 1px
+          ),
+          linear-gradient(to right, var(--grid-line-color) 1px, transparent 1px);
+        background-size:
+          1px 100%,
+          1px 100%;
+        background-position:
+          var(--grid-line-1) 0,
+          var(--grid-line-4) 0;
+        background-repeat: no-repeat;
+      }
 
-<head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-E6RS5N28XQ"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', 'G-E6RS5N28XQ');
-  </script>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/png" href="ladybug.png">
-  <link rel="stylesheet" href="global.styles.css">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Darker+Grotesque:wght@300..900&family=Syne:wght@400..800&display=swap"
-    rel="stylesheet">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-    rel="stylesheet">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <title>Nina's Portfoilo</title>
-</head>
+      /* Projects section - progressive grid lines */
+      .projects-with-grid .grid-lines {
+        background-image:
+          linear-gradient(
+            to right,
+            var(--grid-line-color) 1px,
+            transparent 1px
+          ),
+          linear-gradient(to right, var(--grid-line-color) 1px, transparent 1px);
+        background-size:
+          1px 100%,
+          1px 100%;
+        background-position:
+          var(--grid-line-1) 0,
+          var(--grid-line-4) 0;
+        background-repeat: no-repeat;
+      }
+      @media (min-width: 768px) {
+        .projects-with-grid .grid-lines {
+          background-image:
+            linear-gradient(
+              to right,
+              var(--grid-line-color) 1px,
+              transparent 1px
+            ),
+            linear-gradient(
+              to right,
+              var(--grid-line-color) 1px,
+              transparent 1px
+            ),
+            linear-gradient(
+              to right,
+              var(--grid-line-color) 1px,
+              transparent 1px
+            );
+          background-size:
+            1px 100%,
+            1px 100%,
+            1px calc(100% - var(--grid-crosshair-y));
+          background-position:
+            var(--grid-line-1) 0,
+            var(--grid-line-2) var(--grid-crosshair-y),
+            var(--grid-line-4) 0;
+        }
+      }
+      @media (min-width: 1024px) {
+        .projects-with-grid .grid-lines {
+          background-image:
+            linear-gradient(
+              to right,
+              var(--grid-line-color) 1px,
+              transparent 1px
+            ),
+            linear-gradient(
+              to right,
+              var(--grid-line-color) 1px,
+              transparent 1px
+            ),
+            linear-gradient(
+              to right,
+              var(--grid-line-color) 1px,
+              transparent 1px
+            ),
+            linear-gradient(
+              to right,
+              var(--grid-line-color) 1px,
+              transparent 1px
+            );
+          background-size:
+            1px 100%,
+            1px calc(100% - var(--grid-crosshair-y)),
+            1px calc(100% - var(--grid-crosshair-y)),
+            1px 100%;
+          background-position:
+            var(--grid-line-1) 0,
+            var(--grid-line-2) var(--grid-crosshair-y),
+            var(--grid-line-3) var(--grid-crosshair-y),
+            var(--grid-line-4) 0;
+        }
+      }
+    </style>
+  </head>
 
+  <body>
+    <script src="header.js" type="module"></script>
+    <!-- where header.js is the name of our reusable component script -->
+    <script src="footer.js" type="module"></script>
+    <!-- where header.js is the name of our reusable component script -->
+    <header-component></header-component>
 
+    <div class="geist-grid-wrapper">
+      <section
+        class="px-4 sm:px-10 md:px-10 lg:px-16 2xl:px-16 py-14 lg:pb-24 hero-with-grid"
+      >
+        <div class="grid-lines"></div>
+        <div class="grid-crosshair left"></div>
+        <div class="grid-crosshair right"></div>
 
-<body>
-  <script src="header.js" type="module"></script> <!-- where header.js is the name of our reusable component script -->
-  <script src="footer.js" type="module"></script> <!-- where header.js is the name of our reusable component script -->
-  <header-component></header-component>
-
-  <div class="cursor">
-    <span class="cursor-text"></span>
-  </div>
-  <div class="cursor-follower"></div>
-  <section class="px-4 md:px-16 2xl:px-20 pb-8 lg:pb-24 sm:0">
-    <div class="flex flex-col md:flex-row w-full pt-24 md:pt-48 2xl:pt-64 justify-end md:items-end gap-3">
-
-      <!-- Text content -->
-      <div class="flex flex-col flex-1 gap-8 md:gap-8">
-        <h5 class="font-normal text-[60px] 2xl:text-[72px]">Hi, I'm <span">Nina</span></h5>
-        <h4 class="smolwidth">As a uxui designer, I look for ways to make things just right while aligning design with
-          real-world needs.</h4>
-        <h6 class="smolwidth">When I'm not designing, I'm inspired by music, fashion, and the world around me <span
-            class="text-pig">„</span>• ֊ •<span class="text-pig">„</span></h6>
-      </div>
-      <div class="flex justify-center mb-6 md:mb-0">
-        <a href="about.html">
-          <img src="musi.png" class="hover-image md:h-36 lg:h-48 xl:h-56 2xl:h-[252px] 2xl:pr-4 w-auto"
-            alt="Music Icon">
-        </a>
-      </div>
-
-    </div>
-  </section>
-
-
-
-  <section class=" md:pt-16 border-b border-grey">
-    <div class="flex flex-col lg:flex-row md:px-10 2xl:px-16 gap-y-8 px-4 gap-12">
-      <div
-        class="pb-2 w-full lg:w-28 rounded-full rounded-tl-none h-12 md:h-16 2xl:h-20 2xl:w-32 flex items-center justify-center lg:sticky lg:top-[120px] bg-blob grow-0 border">
-        <!-- Adjusted top here -->
-        <h3 class="text-white text-center 2xl:text-[36px]">uxui</h3>
-      </div>
-      <div class="grid grid-cols-none md:grid-cols-2 flex-1 gap-4 2xl:gap-8 cards-section"></div>
-    </div>
-    <div class="flex flex-col lg:flex-row md:px-10 2xl:px-16 gap-y-8 px-4 gap-12">
-      <div
-        class="pb-2 w-full lg:w-28 rounded-full rounded-tl-none h-12 md:h-16 2xl:h-20 2xl:w-32 flex items-center justify-center lg:sticky lg:top-[120px] bg-gree grow-0">
-        <!-- Adjusted top here -->
-        <h3 class="text-white text-center 2xl:text-[36px]">web</h3>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 flex-1 gap-4 2xl:gap-8 cards-section3"></div>
-    </div>
-  </section>
-
-
-
-
-
-  <section class="flex flex-col md:flex-row pt-8 md:pt-12 md:pb-6 gap-6 flex-1">
-    <div class="flex flex-col gap-4 md:gap-8 px-4 md:px-16 2xl:px-20 sm:pt-10">
-      <h3>Let's Chat</h3>
-      <h4>See something that caught your eye? I’d be happy to collaborate and discuss new opportunities together</h4>
-    </div>
-    <div class="w-full">
-
-      <a href="https://drive.google.com/file/d/15Vbiz09x6SVD2cTScr3ldKVGAPqeNlPY/view?usp=sharing" target="_blank">
         <div
-          class="border-b p-4 pr-3 py-8 md:pr-12 flex items-center justify-between hover:text-indigo-700 duration-500 cursor-pointer hover-image">
-          <h6>Resume</h6>
-          <span class="material-symbols-outlined text-xl">
-            <h2 class="font-thin">trending_flat</h2>
-          </span>
+          class="flex flex-col items-center justify-center w-full relative pt-8 md:pt-0"
+        >
+          <div id="ascii-music-container" class="z-[-1] overflow-hidden"></div>
         </div>
-      </a>
 
-      <a href="about.html">
         <div
-          class="border-b p-4 pr-3 py-8 md:pr-12 flex items-center justify-between hover:text-indigo-700 duration-500 cursor-pointer hover-image">
-          <h6>About</h6>
-          <span class="material-symbols-outlined text-xl">
-            <h2 class="font-thin">trending_flat</h2>
-          </span>
-          <span class="cursor-text">About me</span>
+          class="flex flex-col items-center md:flex-row w-full justify-center gap-8"
+        >
+          <div class="flex flex-col items-center flex-1 gap-8 md:gap-4">
+            <div class="max-w-3xl mx-auto space-y-8 md:space-y-6">
+              <h2 class="text-center pt-8 md:pt-0">
+                Hey I am Nina, a uxui designer.
+              </h2>
+              <p class="smolwidth text-center text-grey">
+                /* As a vocalist and developer, my strengths are on focusing on
+                the technical and fine-tuning harmonous experiences */
+              </p>
+            </div>
+          </div>
         </div>
-      </a>
+      </section>
 
-      <!-- Add the hover-image class to other elements as well -->
-
-      <a href="archive.html">
+      <section class="md:pt-32 projects-with-grid pb-8 lg:pb-24">
+        <div class="grid-lines"></div>
+        <div class="grid-crosshair left"></div>
+        <div class="grid-crosshair right"></div>
         <div
-          class="p-4 pr-3 py-8 md:pr-12 flex items-center justify-between hover:text-indigo-700 duration-500 cursor-pointer hover-image">
-          <h6>Archive</h6>
-          <span class="material-symbols-outlined text-xl">
-            <h2 class="font-thin">trending_flat</h2>
-          </span>
+          class="flex flex-col w-full gap-4 px-4 sm:px-10 md:px-10 lg:px-16 2xl:px-16 pb-8"
+        >
+          <h3 class="z-20">Featured Works</h3>
+          <p class="smolwidth z-20 text-grey">
+            // Craft at the intersection of the visual and the computational
+          </p>
         </div>
-      </a>
+
+        <div class="px-4 sm:px-10 md:px-10 lg:px-16 2xl:px-16">
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 gap-8 cards-section"
+          ></div>
+        </div>
+      </section>
     </div>
-  </section>
 
+    <div
+      class="justify-center bg-[#1B191B] w-[100%] pt-8 md:pt-16 space-y-4 px-4 sm:px-10 md:px-10 lg:px-16 2xl:px-16"
+    >
+      <h3 class="text-white">Designing harmony, one pixel at a time.</h3>
+      <h6 class="text-grey">
+        Play a song that holds a special place in my heart
+      </h6>
+    </div>
 
+    <!-- p5.js Sketch Container -->
+    <section>
+      <div id="sketch-container" class="w-full overflow-hidden"></div>
+    </section>
 
+    <script type="module" src="main.js"></script>
 
+    <script>
+      // Wait for DOM and p5.js to be ready
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", function () {
+          if (typeof p5 !== "undefined") {
+            // p5.js will auto-detect setup() and draw() functions
+          }
+        });
+      }
+    </script>
+    <footer-component></footer-component>
+    <script type="module" src="cursor.js"></script>
 
-  <footer-component></footer-component>
-
-  <script type="module" src="main.js"></script>
-  <script type="module" src="cursor.js"></script>
-
-</body>
-
+    <!-- Load p5.js and sketches AFTER everything else -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.sound.min.js"></script>
+    <script src="sketch.js"></script>
+    <script src="ascii-music.js"></script>
+  </body>
 </html>

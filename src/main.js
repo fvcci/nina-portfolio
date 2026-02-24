@@ -3,17 +3,81 @@ materialIcons.rel = "stylesheet";
 materialIcons.href = "https://fonts.googleapis.com/icon?family=Material+Icons";
 document.head.appendChild(materialIcons);
 
-// Dynamically load another JavaScript file (additional.js)
-const script = document.createElement("script");
-script.src = "cursor.js"; // Path to the additional JS file
-script.type = "text/javascript";
-script.async = true; // Load asynchronously
-document.head.appendChild(script);
+// Create tooltip element for "coming soon" cards
+const tooltip = document.createElement("div");
+tooltip.id = "card-tooltip";
+tooltip.style.cssText = `
+  position: fixed;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fcfcfc;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-family: 'Fragment Mono', monospace;
+  font-size: 14px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  z-index: 1000;
+  white-space: nowrap;
+`;
+tooltip.textContent = "coming soon";
+document.body.appendChild(tooltip);
 
-// Optional: Add a callback after the script is loaded
-script.onload = function () {
-  console.log("cursor.js has been loaded!");
-};
+// Mouse tracking for tooltip - only for cards without links, desktop only
+document.addEventListener("mousemove", (e) => {
+  // Only show tooltip on desktop (md breakpoint and up = 768px)
+  if (window.innerWidth < 768) return;
+
+  const tooltipCards = document.querySelectorAll(".has-tooltip");
+  let shouldShow = false;
+
+  tooltipCards.forEach((card) => {
+    const rect = card.getBoundingClientRect();
+    if (
+      e.clientX >= rect.left &&
+      e.clientX <= rect.right &&
+      e.clientY >= rect.top &&
+      e.clientY <= rect.bottom
+    ) {
+      shouldShow = true;
+    }
+  });
+
+  if (shouldShow) {
+    tooltip.style.opacity = "1";
+    tooltip.style.left = e.clientX + 5 + "px";
+    tooltip.style.top = e.clientY - 28 + "px";
+  } else {
+    tooltip.style.opacity = "0";
+  }
+});
+
+// Helper to build the media element (video or image)
+function getMediaHTML(card, imageClass, hasHover = false) {
+  const hoverClass = hasHover
+    ? "transition duration-300 ease-in-out hover:scale-110"
+    : "";
+  if (card.video) {
+    return `
+      <video
+        src="${card.video}"
+        class="w-full h-auto ${imageClass} ${hoverClass}"
+        autoplay
+        muted
+        loop
+        playsinline
+      ></video>
+    `;
+  }
+  return `
+    <img
+      src="${card.image}"
+      alt="${card.title}"
+      loading="lazy"
+      class="w-full h-auto ${imageClass} ${hoverClass}"
+    />
+  `;
+}
 
 // Unified card creation function
 function createCards(sectionSelector, cardsData, isBrandSection = false) {
@@ -23,249 +87,189 @@ function createCards(sectionSelector, cardsData, isBrandSection = false) {
     return;
   }
 
-  const fragment = document.createDocumentFragment();
+  const col1 = document.createElement("div");
+  col1.className = "flex flex-col gap-12";
+  const col2 = document.createElement("div");
+  col2.className = "flex flex-col gap-12";
 
   cardsData.forEach((card, index) => {
+    const heightClass = "h-auto";
+
     // Create card div
     const cardDiv = document.createElement("div");
-    cardDiv.className =
-      sectionSelector === ".cards-section" && index < 2
-        ? "pb-6 flex flex-col space-y-4 flex-1" // No animation for the first two cards
-        : "pb-6 flex flex-col space-y-4 flex-1 md:down"; // Apply animation to the rest
+    cardDiv.className = "flex flex-col space-y-4";
 
     // Image class based on the card title
     const imageClass =
-      card.title === "Ms. Carry One" ||
       card.title === "Dear Diary" ||
-      card.title === "Goodself Design System"
-        ? "object-cover" // full coverage for some cards
-        : "object-contain"; // Default class for others
-
-    // Set the inner HTML for the card
-    const hoverClass = card.tags.includes("IN PROGRESS")
-      ? ""
-      : "transition duration-300 ease-in-out hover:scale-110"; // Apply hover effect for other titles
+      card.title === "Goodself Design System" ||
+      card.title === "The Digital Music Box - Carousel Visualizer" ||
+      card.title === "Meiva" ||
+      card.title === "The Purrfect Supper"
+        ? "object-cover"
+        : "object-contain";
 
     let tagHTML = "";
     if (card.tags) {
-      const tagsArray = card.tags.split(" | "); // Split tags by "|"
-      tagHTML = /* html */ `
-          <div class="flex flex-wrap gap-1">
-            ${tagsArray
-              .map((tag) => {
-                // Check if the tag is 'rgd' or 'canada' and apply different styles
-                let tagClasses =
-                  "border px-3 py-1 rounded-xl text-base 2xl:text-xl mr-1 mb-1";
-
-                if (tag.toLowerCase().includes("rgd")) {
-                  tagClasses =
-                    "border border-gray-400 text-gray-600 px-3 py-1 rounded-xl text-base 2xl:text-xl mr-1 mb-1"; // Change for 'rgd'
-                } else if (tag.toLowerCase().includes("winner")) {
-                  tagClasses =
-                    "border border-gray-400 text-gray-600 px-3 py-1 rounded-xl text-base 2xl:text-xl mr-1 mb-1";
-                } else if (tag.toUpperCase().includes("PROGRESS")) {
-                  tagClasses =
-                    "border border-gray-400 text-gray-600 px-3 py-1 rounded-xl text-base 2xl:text-xl mr-1 mb-1";
-                } else if (tag.toLowerCase().includes("mention")) {
-                  tagClasses =
-                    "border border-gray-400 text-gray-600 px-3 py-1 rounded-xl text-base 2xl:text-xl mr-1 mb-1";
-                }
-
-                return /* html */ `
-                <span class="${tagClasses}">
-                  ${tag}
-                </span>
-              `;
-              })
-              .join("")}
-          </div>
-        `;
+      const tagsArray = card.tags.split(" | ");
+      const bracketTags = tagsArray.map((tag) => `[${tag.trim()}]`).join(" ");
+      tagHTML = `<p class="text-gray-500">${bracketTags}</p>`;
     }
 
-    const style = document.createElement("style");
-    style.textContent = /* css */ `
-      .parent:hover .pretty::after { 
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        width: 100%;
-        border-radius: 20px;
-        animation: 3s rotate linear infinite;
-        transition: background 0.3s ease-in-out;
-        background: conic-gradient(
-          from var(--angle),
-          #8a90e6 0%,
-          #80b3b3 25%,
-          #e96b8e 50%,
-          #66b3b3 75%,
-          #8a90e6 100%
-        ) border-box;
-      }
-
-      .parent:hover .pretty::before { 
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        width: 100%;
-        border-radius: 20px;
-        animation: 3s rotate linear infinite;
-        transition: background 0.3s ease-in-out;
-        background: conic-gradient(
-          from var(--angle),
-          #8a90e6 0%,
-          #80b3b3 25%,
-          #e96b8e 50%,
-          #66b3b3 75%,
-          #8a90e6 100%
-        ) border-box;
-        filter: blur(0.75rem);
-      }
-
-      @keyframes rotate {
-        to {
-          --angle: 360deg;
-        }
-      }
-      
-      @property --angle {
-        syntax: "<angle>";
-        initial-value: 0deg;
-        inherits: false;
-      }
-    `;
-    document.head.appendChild(style);
-
-    // Apply the hover class dynamically
-    cardDiv.innerHTML = /* html */ `
-    <div class="h-72 lg:h-80 2xl:h-[500px] w-full rounded-2xl relative overflow-hidden bg-[#f3f3f4]">
-      <div class="inner-content h-full w-full rounded-2xl overflow-hidden">
-        <img src="${card.image}" alt="${card.title}" loading="lazy" 
-          class="w-full h-full ${imageClass} ${hoverClass}" 
-          id="card-image-${index}">
+    // Default (no link) card - with tooltip on hover + mobile badge
+    cardDiv.innerHTML = /*html*/ `
+      <div class="${heightClass} w-full rounded-2xl relative z-10 overflow-hidden bg-[#f3f3f4]">
+        <div class="inner-content w-full rounded-2xl overflow-hidden">
+          ${getMediaHTML(card, imageClass, true)}
+        </div>
+        <span class="md:hidden absolute top-3 right-3" style="
+          background: rgba(0, 0, 0, 0.7);
+          color: #fcfcfc;
+          padding: 4px 8px;
+          border-radius: 4px;
+          font-family: 'Fragment Mono', monospace;
+          font-size: 14px;
+        ">
+          COMING SOON
+        </span>
       </div>
-    </div>
-    <h4>${card.title}</h4>
-    <div>${tagHTML}</div>
-  `;
+      <div class="relative z-10">
+        <div>${tagHTML}</div>
+        <h4>${card.title}</h4>
+        ${card.description ? `<p class="text-gray-500">${card.description}</p>` : ""}
+      </div>
+    `;
 
     // Wrap card in a link if the `link` property exists
     if (card.link) {
       const cardContent = /* html */ `
-        <div class="relative parent">
-          <div class="pretty"></div>
+        <div class="relative z-10">
           <div class="flex justify-center items-center rounded-[18px] p-[3px]">
-            <div
-              class="h-72 lg:h-80 2xl:h-[500px] w-full rounded-2xl relative overflow-hidden bg-light"
-            >
-              <div class="relative h-full group">
-                <img
-                  src="${card.image}"
-                  alt="${card.title}"
-                  loading="lazy"
-                  class="w-full h-full object-contain transition duration-300 ease-in-out hover:scale-110"
-                />
+            <div class="${heightClass} w-full rounded-2xl relative z-10 overflow-hidden bg-light">
+              <div class="relative group">
+                ${getMediaHTML(card, imageClass, true)}
               </div>
             </div>
           </div>
         </div>
 
-        <h4>${card.title}</h4>
-        <div>${tagHTML}</div>
+        <div class="relative z-10">
+          <div>${tagHTML}</div>
+          <h4>${card.title}</h4>
+          ${card.description ? `<p class="text-gray-500">${card.description}</p>` : ""}
+        </div>
       `;
-      cardDiv.innerHTML = `<a href="${card.link}" class="space-y-4">${cardContent}</a>`;
+      const isExternal =
+        card.link &&
+        (card.link.startsWith("http://") || card.link.startsWith("https://"));
+      const targetAttr = isExternal
+        ? ' target="_blank" rel="noopener noreferrer"'
+        : "";
+      cardDiv.innerHTML = `<a href="${card.link}" class="space-y-4"${targetAttr}>${cardContent}</a>`;
+    } else {
+      // Only add tooltip class for cards WITHOUT links
+      cardDiv.classList.add("has-tooltip");
     }
 
-    // Append the card to the fragment
-    fragment.appendChild(cardDiv);
+    // Append card to alternating columns
+    if (index % 2 === 0) {
+      col1.appendChild(cardDiv);
+    } else {
+      col2.appendChild(cardDiv);
+    }
   });
 
-  // Append all cards to the section
-  cardsSection.appendChild(fragment);
+  // Append both columns to the section
+  cardsSection.appendChild(col1);
+  cardsSection.appendChild(col2);
 }
 
 // Data for UX/UI cards
 const uxuiCardsData = [
   {
+    title: "Genesys Cloud",
+    tags: "INTERNSHIP",
+    image: "gen.png",
+    description: "Interactive music visualization using p5.js",
+  },
+  {
+    title: "Goodself Design System",
+    tags: "DESIGN SYSTEM | UI LIBRARIES | ACCESSIBILITY | MOBILE, DESKTOP & TABLET",
+    image: "ds.png",
+    description: "Accessible component library for multi-platform products",
+  },
+  {
     title: "Here:after",
     image: "here.png",
     link: "hereafter.html",
-    tags: " UX WINNER | RGD CANADA '23 | UX RESEARCH | MOBILE",
+    tags: "WINNER | RGD CANADA '23 | UX RESEARCH | MOBILE",
+    description: "End-of-life planning app for documenting final wishes",
   },
+  {
+    title: "The Digital Music Box - Carousel Visualizer",
+    tags: "CODE | MUSIC VISUALIZATION",
+    link: "https://editor.p5js.org/ninistar/full/bu9tv-CMp",
+    video: "ponie2.mp4",
+    description: "Interactive music visualization using p5.js",
+  },
+
   {
     title: "Accessichat",
     image: "accessi.png",
     link: "accessichat.html",
-    tags: "AI HONOURABLE MENTION | RGD CANADA '24 | HACKATHON | MOBILE",
-  },
-  {
-    title: "Exomis Design + Development",
-    tags: "IN PROGRESS | RESPONSIVE DESIGN | UX RESEARCH | MOBILE & DESKTOP",
-    image: "exomis.png",
-  },
-  {
-    title: "Goodself Design System",
-    tags: "IN PROGRESS | DESIGN SYSTEM | UI LIBRARIES | ACCESSIBILITY | MOBILE, DESKTOP & TABLET",
-    image: "ds.png",
+    tags: "HONOURABLE MENTION | RGD CANADA '24 | HACKATHON | MOBILE",
+    description: "AI chat interface built with accessibility-first approach",
   },
 ];
 
 // Data for Brand cards
 const brandCardsData = [
   {
-    title: "The Gender Debate",
-    tags: "IN PROGRESS | INTERACTIVE | DIGITAL DESIGN | DATA VISUALIZATION",
-    image: "gender.png",
-  },
-  {
-    title: "Ms. Carry One",
-    tags: "IN PROGRESS | LOGO DESIGN | ILLUSTRATION | BRANDING",
-    image: "exomis2.png",
-  },
-  {
     title: "Lost in Translation",
-    tags: "IN PROGRESS | TYPOGRAPHY | PRINT",
-
+    tags: "TYPOGRAPHY | PRINT",
     image: "sound.png",
+    description: "Typographic study of language barriers",
   },
   {
     title: "How to Plant Plum Trees",
-    tags: "IN PROGRESS | ILLUSTRATION | DATA VISUALIZATION",
+    tags: "ILLUSTRATION | DATA VISUALIZATION",
     image: "tree.png",
+    description: "Botanical guide with data storytelling",
   },
 ];
 
-// Data for Play cards (including Little Red Riding Hood)
+// Data for Play cards
 const playCardsData = [
   {
-    title: "The Spiralist",
-    tags: "IN PROGRESS | TYPOGRAPHY | MOBILE & DESKTOP",
-    image: "spiralist.png",
+    title: "The Purrfect Supper",
+    tags: "CODE | MINI-GAME",
+    link: "https://editor.p5js.org/ninistar/full/UL27yTVgl",
+    video: "pur.mov",
+    description: "Playful mini-game built in p5.js",
+  },
+  {
+    title: "Exomis Design + Development",
+    tags: "RESPONSIVE DESIGN | UX RESEARCH | MOBILE & DESKTOP",
+    image: "exomis.png",
+    description: "Responsive website design with UX research",
+  },
+  {
+    title: "Meiva",
+    tags: "MOBILE & DESKTOP",
+    image: "meiva.png",
+    description: "Cross-platform app for mobile and desktop",
   },
   {
     title: "Dear Diary",
-
-    tags: "IN PROGRESS | STORYBOARDING | ILLUSTRATION | DESKTOP",
-    image: "red.png",
+    tags: "ILLUSTRATION | WEB DESIGN | DESKTOP",
+    link: "https://youtu.be/WAzITLPvqEU",
+    video: "red.mov",
+    description: "Illustrated web experience with personal narratives",
   },
 ];
 
 // Main execution
 document.addEventListener("DOMContentLoaded", () => {
-  // Your existing card creation code
   createCards(".cards-section", uxuiCardsData);
   createCards(".cards-section2", brandCardsData, true);
   createCards(".cards-section3", playCardsData, true);

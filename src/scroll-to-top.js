@@ -23,7 +23,7 @@ class ScrollComponent extends HTMLElement {
           width: 100px;
           height: 100px;
           border-radius: 50%; /* Circle shape */
-          background-color: #211722;
+          background-color: #1B191B;
           color: white;
           display: flex;
           justify-content: center;
@@ -57,7 +57,7 @@ class ScrollComponent extends HTMLElement {
         }
 
         #scroll:hover {
-          background-color: #5e3c49;
+          background-color: #2a2830;
           transform: translateY(-4px); /* Slightly raise on hover */
         }
 

@@ -21,11 +21,11 @@
   }
 
   h2 {
-    @apply text-3xl md:text-4xl md:leading-8 leading-6 tracking-wide 2xl:text-[40px];
+    @apply font-normal text-3xl md:text-[40px] md:leading-8 leading-6 tracking-wide 2xl:text-[40px];
   }
 
   h3 {
-    @apply text-2xl md:text-3xl 2xl:text-4xl md:leading-8 leading-6 tracking-wide;
+    @apply font-normal text-2xl md:text-3xl 2xl:text-4xl md:leading-8 leading-6 tracking-wide;
   }
 
   h4 {
@@ -37,7 +37,10 @@
   }
 
   p {
-    @apply text-lg leading-4 2xl:text-xl;
+    @apply text-sm leading-6  2xl:text-xl;
+    font-family: "Fragment Mono", monospace;
+    font-weight: 300;
+    letter-spacing: -0.04em;
   }
 
   .normal-section {
@@ -65,78 +68,29 @@
   @layer utilities {
   }
 
-  /* Default cursor style */
-  .cursor {
+  /*this is p5js code aaaa
+  html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; 
+}
+Prevents scrollbars if canvas is full screen */
+  /* Style the container, not the canvas directly */
+  #canvas-container {
+    width: 100%;
     position: absolute;
-    pointer-events: none;
-    background-color: #f9dddc; /* Change to your preferred color */
-    width: 1rem; /* Normal size */
-    height: 1rem;
-    border-radius: 50%; /* Circular shape */
-    z-index: 1000;
-    transform: translate(-50%, -50%); /* Center the cursor */
-    transition: transform 0.2s ease-out; /* Smooth transition for scaling */
+    display: flex; /* Centers the canvas inside the div */
+    justify-content: center;
+    margin-top: 50px; /* Pushes it down from the top */
+    margin-bottom: 50px; /* Pushes it down from the top */
+
+    border: 2px solid white; /* Optional: lets you see the box edges */
   }
 
-  /* Follower cursor style */
-  .cursor-follower {
-    position: absolute;
-    pointer-events: none;
-    background-color: rgba(255, 255, 255, 0.3); /* Light transparent color */
-
-    width: 2rem; /* Default size */
-    height: 2rem;
-    border-radius: 50%;
-    opacity: 0; /* Initially invisible */
-    z-index: 999;
-    transform: translate(-50%, -50%);
-    transition:
-      opacity 0.3s ease-out,
-      transform 0.2s ease-out;
-  }
-
-  .cursor.hovering {
-    transform: scale(6) translate(-50%, -50%); /* Enlarge the cursor on hover */
-  }
-
-  .cursor-follower.hovering {
-    opacity: 1;
-    transform: scale(2) translate(-50%, -50%); /* Slightly bigger follower */
-  }
-
-  /* Text inside the cursor */
-  .cursor-text {
-    display: none; /* Hide text initially */
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: rgb(233, 41, 137); /* Adjust color as needed */
-    pointer-events: none; /* Avoid interfering with cursor events */
-    line-height: 4px; /* Adjust line height to ensure proper spacing */
-    text-align: center; /* Align the text to the center horizontally */
-  }
-
-  .cursor.hovering .cursor-text {
-    display: block; /* Show text when hovering */
-    font-size: 4px; /* Adjust size of the text inside the cursor */
-  }
-  @media (hover: none) and (pointer: coarse) {
-    .cursor,
-    .cursor-follower {
-      display: none; /* Hide the custom cursor */
-    }
-  }
-
-  @media (min-width: 1536px) {
-    /* 2XL screens */
-    .cursor.hovering {
-      transform: scale(8) translate(-50%, -50%); /* Increase size */
-    }
-
-    .cursor-follower.hovering {
-      transform: scale(3) translate(-50%, -50%); /* Bigger follower */
-    }
+  /* Reset the canvas CSS to be simple */
+  canvas {
+    display: block;
+    /* Remove absolute/fixed positioning here so it stays in the box */
   }
 
   /* Custom infinite scrolling animation */
@@ -185,4 +139,186 @@
   }
 
   /*border animations */
+}
+
+/* Geist Grid System - Using CSS Variables */
+.geist-grid-wrapper {
+  position: relative;
+  /* Grid position variables - used by both lines and crosshairs */
+  --grid-line-1: 10%;
+  --grid-line-2: 37%;
+  --grid-line-3: 63%;
+  --grid-line-4: 90%;
+  --grid-crosshair-y: 20px;
+  /* Colors from config - full opacity */
+  --crosshair-color: #272630;
+  --grid-line-color: #dedcdc;
+}
+
+/* Grid lines container */
+.grid-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Sections with grid */
+.hero-with-grid,
+.projects-with-grid {
+  position: relative;
+  z-index: 1;
+}
+
+/* Grid crosshair styling */
+.grid-crosshair {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
+  z-index: 10;
+  /* Center the crosshair on the intersection point */
+  transform: translate(-50%, -50%);
+}
+
+/* Create the + symbol using pseudo-elements */
+.grid-crosshair::before,
+.grid-crosshair::after {
+  content: "";
+  position: absolute;
+  background: var(--crosshair-color);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Horizontal line of + */
+.grid-crosshair::before {
+  width: 24px;
+  height: 1px;
+}
+
+/* Vertical line of + */
+.grid-crosshair::after {
+  width: 1px;
+  height: 24px;
+}
+
+/* Hero section - only 2 vertical lines framing center (1 column) */
+.hero-with-grid .grid-lines {
+  background-image:
+    linear-gradient(to right, var(--grid-line-color) 1px, transparent 1px),
+    linear-gradient(to right, var(--grid-line-color) 1px, transparent 1px);
+  background-size: 1px 100%;
+  background-position:
+    var(--grid-line-1) 0,
+    var(--grid-line-4) 0;
+  background-repeat: no-repeat;
+}
+
+/* Hero horizontal line */
+.hero-with-grid::before {
+  content: "";
+  position: absolute;
+  top: calc(var(--grid-crosshair-y) + 24px);
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--grid-line-color);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Hero left crosshair - intersects at line 1 */
+.hero-with-grid .grid-crosshair.left {
+  top: calc(var(--grid-crosshair-y) + 24px);
+  left: var(--grid-line-1);
+}
+
+/* Hero right crosshair - intersects at line 4 */
+.hero-with-grid .grid-crosshair.right {
+  top: calc(var(--grid-crosshair-y) + 24px);
+  left: var(--grid-line-4);
+}
+
+#ascii-music-container canvas {
+}
+
+/* Projects section - 4 vertical lines (2 columns) */
+/* Lines 1 & 4 go full height, lines 2 & 3 start at crosshair y position */
+.projects-with-grid .grid-lines {
+  background-image:
+    linear-gradient(to right, var(--grid-line-color) 1px, transparent 1px),
+    linear-gradient(to right, var(--grid-line-color) 1px, transparent 1px),
+    linear-gradient(to right, var(--grid-line-color) 1px, transparent 1px),
+    linear-gradient(to right, var(--grid-line-color) 1px, transparent 1px);
+  background-size:
+    1px 100%,
+    1px calc(100% - var(--grid-crosshair-y)),
+    1px calc(100% - var(--grid-crosshair-y)),
+    1px 100%;
+
+  background-position:
+    var(--grid-line-1) 0,
+    var(--grid-line-2) var(--grid-crosshair-y),
+    var(--grid-line-3) var(--grid-crosshair-y),
+    var(--grid-line-4) 0;
+  background-repeat: no-repeat;
+}
+
+/* Projects horizontal line at crosshair y - full width */
+.projects-with-grid::before {
+  content: "";
+  position: absolute;
+  top: var(--grid-crosshair-y);
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--grid-line-color);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Projects top horizontal line - between vertical lines 1 and 4, above crosshairs */
+.projects-with-grid::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: var(--grid-line-1);
+  right: calc(100% - var(--grid-line-4));
+  height: 1px;
+  background: var(--grid-line-color);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Projects left crosshair - intersects at line 1 with horizontal line */
+.projects-with-grid .grid-crosshair.left {
+  top: var(--grid-crosshair-y);
+  left: var(--grid-line-1);
+}
+
+/* Projects right crosshair - intersects at line 4 with horizontal line */
+.projects-with-grid .grid-crosshair.right {
+  top: var(--grid-crosshair-y);
+  left: var(--grid-line-4);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .geist-grid-wrapper {
+    --grid-line-1: 5%;
+    --grid-line-2: 35%;
+    --grid-line-3: 65%;
+    --grid-line-4: 95%;
+  }
+
+  .hero-with-grid .grid-crosshair.left,
+  .hero-with-grid .grid-crosshair.right,
+  .projects-with-grid .grid-crosshair.left {
+    display: none;
+  }
 }
