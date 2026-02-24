@@ -105,15 +105,10 @@ function initAsciiMusic() {
       }, 200);
     };
 
-    p.touchStarted = function () {
-      if (isMobile && p.touches.length > 0) { touchX = p.touches[0].x; touchY = p.touches[0].y; }
-      return false;
-    };
-    p.touchMoved = function () {
-      if (isMobile && p.touches.length > 0) { touchX = p.touches[0].x; touchY = p.touches[0].y; }
-      return false;
-    };
-    p.touchEnded = function () { touchX = -1000; touchY = -1000; return false; };
+    p.touchStarted = function () { if (isMobile && p.touches.length > 0) { touchX = p.touches[0].x; touchY = p.touches[0].y; } };
+p.touchMoved = function () { if (isMobile && p.touches.length > 0) { touchX = p.touches[0].x; touchY = p.touches[0].y; } };
+p.touchEnded = function () { touchX = -1000; touchY = -1000; };
+
     p.mousePressed = function () {
       if (!isMobile) { startTime = p.millis() / 1000; asciiAmount = 1; }
     };
@@ -300,7 +295,7 @@ function initAsciiMusic() {
       p.noStroke();
     };
   };
-  new p5(sketch);
+new p5(sketch, document.getElementById('ascii-music-container'));
 }
 
 initAsciiMusic();

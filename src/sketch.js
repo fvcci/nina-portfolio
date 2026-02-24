@@ -392,7 +392,7 @@ function initSketch() {
       }[n];
     }
   };
-  new p5(sketch);
+new p5(sketch, document.getElementById('sketch-container'));
 }
 
 initSketch();
