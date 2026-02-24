@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import { resolve } from "path";
+import { readdirSync } from "fs";
 
 export default defineConfig({
   root: resolve(__dirname, "src"), // Make sure this is an absolute path
@@ -7,16 +8,13 @@ export default defineConfig({
     outDir: resolve(__dirname, "dist"), // Use absolute path
     emptyOutDir: true, // Add this to clear the output directory
     rollupOptions: {
-      input: {
-        main: resolve(__dirname, "src/index.html"),
-        about: resolve(__dirname, "src/about.html"),
-        archive: resolve(__dirname, "src/archive.html"),
-        hereafter: resolve(__dirname, "src/hereafter.html"),
-        accessichat: resolve(__dirname, "src/accessichat.html"),
-        //footer: resolve(__dirname, "src/footer.html"),
-        //navbar: resolve(__dirname, "src/navbar.html"),
-        // Add all your additional pages here
-      },
+      input: readdirSync(resolve(__dirname, "src"))
+        .filter((file) => file.endsWith(".html"))
+        .reduce((acc, file) => {
+          const name = file.replace(".html", "");
+          acc[name] = resolve(__dirname, "src", file);
+          return acc;
+        }, {}),
     },
   },
   server: {
